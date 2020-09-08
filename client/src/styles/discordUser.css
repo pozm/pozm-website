@@ -1,0 +1,29 @@
+.pcoolbg {
+    color: rgb(235, 235, 235);
+    word-break: break-word;
+    margin-right: 32px;
+    background: #f0f8ff2e;
+    border-radius: 6px;
+    padding: 0 10px;
+    margin-bottom: 0;
+}
+.avatarParent {
+    display: flex;
+    flex-flow: wrap;
+    align-items: center;
+}
+.AvatarText {
+    font-size: large;
+    justify-content: center;
+    margin-bottom: 0px;
+}
+.DiscordUser {
+    background-color: #ffffff11;
+    border-radius: 5px;
+    padding: 7px;
+    padding-right: 10px;
+    width: auto;
+}
+.DiscordUser:not(:last-child) {
+    margin-bottom: 10px;
+}

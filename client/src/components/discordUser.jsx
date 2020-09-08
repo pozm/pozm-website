@@ -1,0 +1,40 @@
+import React from "react";
+import "../styles/discordUser.css";
+import "../styles/utils.css";
+
+class DiscordUser extends React.Component {
+  render() {
+    return (
+      <div className="DiscordUser">
+        <div
+          className="avatarParent"
+          style={{ marginBottom: this.props.text ? "10px" : "0px" }}
+        >
+          <div className="CircleMask" style={{ marginRight: "10px" }}>
+            <img
+              src={this.props.avatar}
+              width={this.props.size ?? "64"}
+              alt="uhh this should of loaded"
+            />
+          </div>
+          <p className="AvatarText">
+            <a target="_blank" rel="noopener noreferrer" href={this.props.reff}>
+              {this.props.userName}
+            </a>
+            <span style={{ fontSize: "xx-small" }}>
+              {this.props.tag ? "#" : ""}
+              {this.props.tag}{" "}
+            </span>
+          </p>
+        </div>
+        {this.props.text && (
+          <div style={{ maxWidth: "1000px", display: "flex" }}>
+            <div className="hbar" />
+            <p className="pcoolbg">{this.props.text}</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+export default DiscordUser;

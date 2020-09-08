@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+}
+
+[data-theme=dark] {
+  color: #bebebe;
+  background-color: #222;
+}
+html {
+  scroll-behavior: smooth;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  background: transparent;
+  z-index: 1;
+  transition: all 1s;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  z-index: 1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.575);
+  border-radius: 4px;
+  z-index: 1;
+}
+html, body {
+  overflow: overlay;
+}

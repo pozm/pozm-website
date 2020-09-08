@@ -1,0 +1,28 @@
+.lastTopMargin {
+    margin-bottom: 10px;
+}
+.shadow::after {
+    box-shadow: inset 0 0 6px 6px #222;
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.hbar {
+    margin: 0 30px;
+    background-color: rgb(26, 26, 26);
+    min-width: 4px;
+    height: auto;
+    border-radius: 7px;
+}
+.CircleMask {
+    clip-path: circle(50% at 50% 50%);
+}
+.CircleMask > img {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
