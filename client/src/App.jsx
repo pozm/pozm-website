@@ -1,23 +1,26 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./pages/home";
-import Login from "./pages/login";
-import Navigation from "./components/nav";
-import Signup from "./pages/signup";
-import Grincher from "./pages/grincher";
-import Contact from "./pages/contact";
-import Page404 from "./pages/404";
-import WebhookT from "./pages/webhookTools";
-import userContext from "./hooks/userContext";
+import React, { useMemo, useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './pages/home';
+import Login from './pages/login';
+import Navigation from './components/nav';
+import Signup from './pages/signup';
+import Grincher from './pages/grincher';
+import Contact from './pages/contact';
+import Page404 from './pages/404';
+import WebhookT from './pages/webhookTools';
+import userContext from './hooks/userContext';
+import PageOther from './pages/other';
 
 export default function App(props) {
 	const [user, setUser] = useState(null);
 
-  fetch("/api/getUser")
-  .then((res) => res.json())
-  .then((out) => {
-    if (!out.error && out.data) setUser(out.data);
-  });
+	useMemo(() => {
+		fetch('/api/getUser')
+			.then((res) => res.json())
+			.then((out) => {
+				if (!out.error && out.data) setUser(out.data);
+			});
+	}, []);
 	return (
 		<div className="App">
 			<Router>
@@ -50,7 +53,12 @@ export default function App(props) {
 							exact
 							component={() => <WebhookT />}
 						/>
-						<Route component={() => <Page404 />} />
+						<Route
+							path="/Other"
+							exact
+							component={() => <PageOther />}
+						/>
+						<Route component={Page404} />
 					</Switch>
 				</userContext.Provider>
 			</Router>

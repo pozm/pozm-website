@@ -92,7 +92,7 @@ APIRouter.delete('/killSession', (req,res)=>{
     else {
         cookie.destroy(()=>{})
         res.status(200)
-        res.send('{}')
+            .send('{}')
     }
 })
 

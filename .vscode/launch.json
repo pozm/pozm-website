@@ -9,11 +9,24 @@
             "preLaunchTask": "npm: build",
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Build",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\dist\\index.js",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "preLaunchTask": "npm: dev",
+            "type": "node",
+            "request": "launch",
+            "name": "Run dev",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

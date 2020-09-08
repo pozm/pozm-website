@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import DiscordUser from "../components/discordUser";
 import bo_pfp from "../images/discord/bo.gif"
@@ -7,7 +7,9 @@ import ds_pfp from "../images/discord/ds.webp"
 import az_pfp from "../images/discord/az.gif"
 import ha_pfp from "../images/discord/ha.gif"
 import pi_pfp from "../images/discord/pi.webp"
+import userContext from "../hooks/userContext";
 function Home() {
+  let {user} = useContext(userContext);
   return (
     <div className="home">
       <div className="container">
@@ -58,7 +60,7 @@ function Home() {
             <DiscordUser avatar = {pi_pfp} userName='pickl' />
           </div>
         </div>
-        <small>Sign in to access more!</small>
+        <small> {user?.id ? <Link to="Other" >View other content</Link> : 'Sign in to access more!'} </small>
       </div>
     </div>
   );
