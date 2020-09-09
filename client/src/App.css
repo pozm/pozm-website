@@ -28,3 +28,25 @@ html {
 html, body {
   overflow: overlay;
 }
+
+hr {
+
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(26, 26, 26);
+  border-radius: 4px;
+
+}
+
+hr.thick {
+
+  height: 5px;
+
+}
+
+hr.light {
+
+  height: 3px;
+
+}

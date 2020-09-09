@@ -1,0 +1,25 @@
+.itParent {
+    display: flex;
+    flex-flow: wrap;
+    align-items: center;
+}
+.InfoText {
+    font-size: large;
+    justify-content: center;
+    margin-bottom: 0px;
+}
+.InfoBox {
+    background-color: #ffffff11;
+    border-radius: 5px;
+    padding: 7px;
+    padding-right: 10px;
+    width: auto;
+    margin: 5px 15px
+}
+.hbar {
+    margin: 0 15px!important;
+    background-color: rgb(26, 26, 26);
+    min-width: 4px;
+    height: auto;
+    border-radius: 7px;
+}

@@ -1,5 +1,6 @@
+import $ from "jquery";
 import React from "react";
-import $ from "jquery"
+import userContext from "../hooks/userContext";
 
 let regx = /^https:\/\/(canary|ptb)?\.?discord(app)?\.com\/api\/webhooks\/(?<id>\d+)\/(?<secret>\S*)$/mi
 
@@ -20,6 +21,7 @@ function getDataUrl(img) {
 }
 
 class WebhookT extends React.Component {
+    static contextType = userContext
     constructor(props){
         super(props)
         this.state = {URL : '', isUrlValid:false, webhookData:{}, modificationData:{content:'',avatar:'', avatarBASE:'',name:''}}

@@ -1,22 +1,21 @@
-import React from "react";
-import { Link, withRouter } from "react-router-dom";
-import userContext from "../hooks/userContext";
+import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import userContext from '../hooks/userContext';
 
 // let uv = useContext(userContext);
 
 class Navigation extends React.Component {
-
-  static contextType = userContext
+	static contextType = userContext;
 
 	constructor(props) {
 		super(props);
-    this.state = { data: {} };
-    
-    this.signOut = this.signOut.bind(this)
+		this.state = { data: {} };
+
+		this.signOut = this.signOut.bind(this);
 	}
 
 	signOut() {
-		fetch("/api/killSession", { method: "DELETE" }).then((res) => {
+		fetch('/api/killSession', { method: 'DELETE' }).then((res) => {
 			if (res.ok) return this.context.setUser(null);
 		});
 	}
@@ -47,9 +46,9 @@ class Navigation extends React.Component {
 							<ul className="navbar-nav ml-auto">
 								<li
 									className={`nav-item  ${
-										this.props.location.pathname === "/"
-											? "active"
-											: ""
+										this.props.location.pathname === '/'
+											? 'active'
+											: ''
 									}`}
 								>
 									<Link className="nav-link" to="/">
@@ -59,9 +58,9 @@ class Navigation extends React.Component {
 								<li
 									className={`nav-item  ${
 										this.props.location.pathname ===
-										"/contact"
-											? "active"
-											: ""
+										'/contact'
+											? 'active'
+											: ''
 									}`}
 								>
 									<Link className="nav-link" to="/contact">
@@ -78,7 +77,7 @@ class Navigation extends React.Component {
 												aria-haspopup="true"
 												aria-expanded="false"
 											>
-												Logged in as{" "}
+												Logged in as{' '}
 												{this.context?.user?.username}
 											</button>
 
@@ -86,7 +85,8 @@ class Navigation extends React.Component {
 												className="dropdown-menu"
 												aria-labelledby="dropdownMenuLink"
 											>
-												{this.context?.user?.powerId >= 5 && (
+												{this.context?.user?.powerId >=
+													5 && (
 													<Link
 														to="/admin"
 														className="dropdown-item"
@@ -108,7 +108,7 @@ class Navigation extends React.Component {
 													onClick={this.signOut}
 													href="#"
 												>
-													Sign out
+													Sign out 
 												</button>
 											</div>
 										</div>

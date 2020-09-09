@@ -7,8 +7,9 @@ function Page404(props) {
         <div className="row align-items-center my-5">
           <div className="col-lg">
             <h1 className="font-weight-light">404</h1>
+            <p style={{fontSize:'small'}} >(Not found)</p>
             <div>
-              Unfortunately <b> {props.location.pathname} </b> does not exist!<br/>
+              Unfortunately <b> {props.location.pathname}</b> does not exist!<br/>
               This could be due to a few things. <br/><br/>
               <ol style={{textAlign:'initial'}}>
                   <li>Simply the page doesn't exist</li>

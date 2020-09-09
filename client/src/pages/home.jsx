@@ -44,7 +44,7 @@ function Home() {
             <p>
               I am a programmer.
               I know various different programming langages including most markup langages.
-              Some programming languages i know conclude of python, javascript, typescript, c#, lua, mysql.
+              Some programming languages i know conclude of python, javascript, typescript, c#, lua, mysql<span hidden>i know it's a query lanuage more than a programming language</span> .
               Some markup languages i know: html, markdown, css
             </p>
           </div>

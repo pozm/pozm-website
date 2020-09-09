@@ -10,6 +10,7 @@ import Page404 from './pages/404';
 import WebhookT from './pages/webhookTools';
 import userContext from './hooks/userContext';
 import PageOther from './pages/other';
+import Page401 from './pages/401';
 
 export default function App(props) {
 	const [user, setUser] = useState(null);
@@ -51,12 +52,12 @@ export default function App(props) {
 						<Route
 							path="/Webhook"
 							exact
-							component={() => <WebhookT />}
+							component={() => user ? <WebhookT /> : <Page401 msg="You must be signed in to access this." />}
 						/>
 						<Route
 							path="/Other"
 							exact
-							component={() => <PageOther />}
+							component={() => user? <PageOther /> : <Page401 msg="You must be signed in to access this." />}
 						/>
 						<Route component={Page404} />
 					</Switch>
