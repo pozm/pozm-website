@@ -8,23 +8,26 @@ class DiscordUser extends React.Component {
       <div className="DiscordUser">
         <div
           className="avatarParent"
-          style={{ marginBottom: this.props.text ? "10px" : "0px" }}
+          style={{ marginBottom: this.props.text ? "10px" : "0px", justifyContent:!this.props.avatar && !this.props.tag ? 'center' : 'initial' }}
         >
-          <div className="CircleMask" style={{ marginRight: "10px" }}>
-            <img
-              src={this.props.avatar}
-              width={this.props.size ?? "64"}
-              alt="uhh this should of loaded"
-            />
-          </div>
+          { this.props.avatar && 
+            <div className="CircleMask" style={{ marginRight: "10px" }}>
+              <img
+                src={this.props.avatar}
+                width={this.props.size ?? "64"}
+                alt="uhh this should of loaded"
+                />
+            </div>
+          }
           <p className="AvatarText">
             <a target="_blank" rel="noopener noreferrer" href={this.props.reff}>
               {this.props.userName}
             </a>
-            <span style={{ fontSize: "xx-small" }}>
-              {this.props.tag ? "#" : ""}
-              {this.props.tag}{" "}
-            </span>
+            {this.props.tag &&
+              <span style={{ fontSize: "xx-small" }}>
+                #{this.props.tag}
+              </span>
+            }
           </p>
         </div>
         {this.props.text && (
