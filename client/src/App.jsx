@@ -52,7 +52,7 @@ export default function App(props) {
 						<Route
 							path="/Webhook"
 							exact
-							component={() => user ? <WebhookT /> : <Page401 msg="You must be signed in to access this." />}
+							component={() => <WebhookT /> }
 						/>
 						<Route
 							path="/Other"
