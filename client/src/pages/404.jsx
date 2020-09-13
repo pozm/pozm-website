@@ -1,6 +1,9 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 function Page404(props) {
+  let location = props.location ?? useLocation()
+
   return (
     <div className="home">
       <div className="container" style={{display:'flex',flexFlow:'wrap',justifyContent:'center'}}>
@@ -9,7 +12,7 @@ function Page404(props) {
             <h1 className="font-weight-light">404</h1>
             <p style={{fontSize:'small'}} >(Not found)</p>
             <div>
-              Unfortunately <b> {props.location.pathname}</b> does not exist!<br/>
+              Unfortunately <b> {location.pathname}</b> does not exist!<br/>
               This could be due to a few things. <br/><br/>
               <ol style={{textAlign:'initial'}}>
                   <li>Simply the page doesn't exist</li>

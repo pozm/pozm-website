@@ -67,7 +67,7 @@ class Navigation extends React.Component {
 										Contact
 									</Link>
 								</li>
-								{this.context?.user?.id ? (
+								{this.context?.user?.ID ? (
 									<li>
 										<div className="dropdown">
 											<button
@@ -78,14 +78,14 @@ class Navigation extends React.Component {
 												aria-expanded="false"
 											>
 												Logged in as{' '}
-												{this.context?.user?.username}
+												{this.context?.user?.Username}
 											</button>
 
 											<div
 												className="dropdown-menu"
 												aria-labelledby="dropdownMenuLink"
 											>
-												{this.context?.user?.powerId >=
+												{this.context?.user?.PowerID >=
 													5 && (
 													<Link
 														to="/admin"
@@ -115,16 +115,6 @@ class Navigation extends React.Component {
 									</li>
 								) : (
 									<li>
-										<Link
-											to="/Signup"
-											type="button"
-											className="btn btn-light tooltip-directions mr-1"
-											data-toggle="tooltip"
-											data-placement="bottom"
-											title="Create an account"
-										>
-											Sign up
-										</Link>
 										<Link
 											to="/Login"
 											type="button"

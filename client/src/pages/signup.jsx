@@ -1,14 +1,18 @@
 import React, { useContext } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import AccountForm from "../components/AccountForm";
 import userContext from "../hooks/userContext";
+import Page404 from "./404";
 
 let ref = React.createRef();
 let recaptcha = React.createRef();
 
-function Signup() {
+function Signup(props) {
 
   let {user, setUser} = useContext(userContext);
+  let location = useLocation()
+  let search = new URLSearchParams(location.search)
+  let key = search.get('key')
 
   async function CreateAccount(e, state) {
     if (!Object.values(state).every((v) => v !== ""))
@@ -17,7 +21,7 @@ function Signup() {
         (ref.current.innerText = "Missing values.")
       );
     let data = await fetch("/api/createAccount", {
-      body: JSON.stringify(state),
+      body: JSON.stringify({...state,key}),
       mode: "same-origin",
       method: "POST",
     });
@@ -34,7 +38,8 @@ function Signup() {
     }
   }
 	return (
-		<div className="home">
+    <div className="home">
+    {key === ''||key===null ? <Page404/> : 
 			<div
 				className="container"
 				style={{
@@ -44,14 +49,18 @@ function Signup() {
 					paddingTop: "30px",
 				}}
 			>
-        {user?.id && <Redirect from="/Signup" to="/" />}
-				<AccountForm
-					recaptchaRef={recaptcha}
-					helperMsgRef={ref}
-					Login="false"
-					SubmitFunc={CreateAccount}
-				/>
+        {user?.ID && <Redirect from="/Signup" to="/" />}
+        <div>
+          <h2>Using key : {key} </h2>
+          <AccountForm
+            recaptchaRef={recaptcha}
+            helperMsgRef={ref}
+            Login="false"
+            SubmitFunc={CreateAccount}
+          />
+        </div>
 			</div>
+    }
 		</div>
 	);
 }

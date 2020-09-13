@@ -60,7 +60,7 @@ function Home() {
             <DiscordUser avatar = {pi_pfp} userName='pickl' />
           </div>
         </div>
-        <small> {user?.id ? <Link to="Other" >View other content</Link> : 'Sign in to access more!'} </small>
+        <small> {user?.ID ? <Link to="Other" >View other content</Link> : 'Sign in to access more!'} </small>
       </div>
     </div>
   );

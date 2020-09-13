@@ -28,13 +28,16 @@ APIRouter.post('/CreateAccount', async (req,res) => {
 
     if (!resb.success) return res.status(400).json({error:21,message:'You have failed the recaptcha, try again?'})
 
-    let {UserName,Password,Email} = req.body
-    if (! UserName||!Password||!Email) return res.status(400).send(JSON.stringify({error:19,message:'Missing credentials'}))
+    let {UserName,Password,Email,key} = req.body
+    if (! UserName||!Password||!Email||!key) return res.status(400).send(JSON.stringify({error:19,message:'Missing credentials'}))
 
     if (!Email.match(/.{0,64}[@](\w{0,255}[.])\w{0,10}/)) return res.status(400).send(JSON.stringify({'error':3,message:'bad email'}))
     if (UserName.match(/(.{30,}|[^A-Za-z\d])/)) return res.status(400).send(JSON.stringify({'error':4,message:'bad username'}))
     if (!Password.match(/^[\x00-\x7F]{8,32}$/i)) return res.status(400).send(JSON.stringify({'error':7,message:'password is invalid (bad)'}))
-    con.query('select * from `whitelist`.`account` where username = ? or email = ?', [UserName,Email], async (err , resu) => {
+    let keydata = await AsyncQuery<{KEYID:string,PowerID:number}>('select `KEYID`,`PowerID` from `whitelist`.`keycode` where `KEYID` = ? and Registered=0', key)
+    console.log(keydata,key)
+    if (!keydata[0]) return res.status(400).json({error:9,message:'invalid key'})
+    con.query('select * from `whitelist`.`account` where Username = ? or Email = ?', [UserName,Email], async (err , resu) => {
 
         if (err) throw err
         if (0 in resu) {
@@ -45,7 +48,8 @@ APIRouter.post('/CreateAccount', async (req,res) => {
         else {
 
             let hash = crypto.createHash('sha512').update(Password);
-            con.query('insert into \`whitelist\`.\`account\` (username,password,email,registerIp) values (?, ?, ?, ?)', [UserName,hash.digest('hex'),Email, req.ip]);
+            con.query('insert into \`whitelist\`.\`account\` (Username,Password,Email,RegisteredIP,LastIP, KEYID,PowerID) values (?, ?, ?, ?,?,?,?)', [UserName,hash.digest('hex'),Email, req.ip,req.ip,key,keydata[0]?.PowerID ?? 0]);
+            con.query('update `whitelist`.`keycode` set Registered=1,CreatedAT=current_timestamp where KEYID=?', key);
             (req.session as Express.Session).logedInto = await getIdFromUser(UserName)
             res.send(JSON.stringify({'message':'sucessfully logged in'}))
 
@@ -74,7 +78,7 @@ APIRouter.post('/LogintoAccount', async (req,res) => {
     let hash = crypto.createHash('sha512')
         .update(Password)
     let digested = hash.digest('hex')
-    con.query('select * from `whitelist`.`account` where password = ? and (username = ? or email = ?)', [digested, UserName ?? '', UserName ?? ''], (err,resi) => {
+    con.query('select * from `whitelist`.`account` where Password = ? and (Username = ? or Email = ?)', [digested, UserName ?? '', UserName ?? ''], (err,resi) => {
         if (err) throw err
         if (0 in resi) {
             (req.session as Express.Session).logedInto = resi[0].id

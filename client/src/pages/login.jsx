@@ -45,7 +45,7 @@ function Login() {
 					paddingTop: "30px",
 				}}
 			>
-        {user?.id && <Redirect from="/Login" to="/" />}
+        {user?.ID && <Redirect from="/Login" to="/" />}
 				<AccountForm
 					recaptchaRef={recaptcha}
 					helperMsgRef={ref}
