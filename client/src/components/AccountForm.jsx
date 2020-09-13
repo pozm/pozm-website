@@ -26,7 +26,7 @@ class AccountForm extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.handleSubmit} style = {this.props.style} className={this.props.className} >
                 <div className="form-group">
                     <label htmlFor="Email">Email address {this.props.Login ==='true' ? 'Or Username' : ''} </label>
                     <input className="form-control" type={this.props.Login ==='true' ? 'text':'email'} id="Email" placeholder="Enter email" onChange={this.handleChange} />

@@ -50,9 +50,11 @@ function Signup(props) {
 				}}
 			>
         {user?.ID && <Redirect from="/Signup" to="/" />}
-        <div>
+        <div >
           <h2>Using key : {key} </h2>
           <AccountForm
+            className="mx-auto"
+            style={{width:'fit-content'}}
             recaptchaRef={recaptcha}
             helperMsgRef={ref}
             Login="false"
