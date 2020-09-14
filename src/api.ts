@@ -81,7 +81,8 @@ APIRouter.post('/LogintoAccount', async (req,res) => {
     con.query('select * from `whitelist`.`account` where Password = ? and (Username = ? or Email = ?)', [digested, UserName ?? '', UserName ?? ''], (err,resi) => {
         if (err) throw err
         if (0 in resi) {
-            (req.session as Express.Session).logedInto = resi[0].id
+            (req.session as Express.Session).logedInto = resi[0].ID
+            console.log((req.session as Express.Session).logedInto)
             res.send(JSON.stringify({error : false, message : 'Logged in'}))
         }
         else {

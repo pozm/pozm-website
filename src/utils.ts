@@ -8,7 +8,7 @@ async function getIdFromUser (user:number) {
         con.query('select id from `whitelist`.`account` where Username = ?',user, (err, res2) => {
 
             if (err) throw err
-            if (0 in res2) return res( res2[0].id)
+            if (0 in res2) return res( res2[0].ID)
             res(false)
         })
 

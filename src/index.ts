@@ -76,6 +76,8 @@ const con = createConnection({
   user: "root",
   password: keys.mysqlPassWord,
 });
+
+
 let type = false;
 if (process.argv[2] == "prod") {
   type = true;
