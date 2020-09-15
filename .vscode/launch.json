@@ -6,19 +6,6 @@
     "configurations": [
 
         {
-            "preLaunchTask": "npm: build",
-            "type": "node",
-            "request": "launch",
-            "name": "Build",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\dist\\index.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
-        },
-        {
             "preLaunchTask": "npm: dev",
             "type": "node",
             "request": "launch",
