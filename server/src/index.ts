@@ -104,9 +104,9 @@ let asyncQuery = promisify(con.query);
 // app.use('/graphql',mw)
 app.use("/api", APIRouter);
 if (type) {
-  app.use(express.static(join(__dirname, "../client/build")));
+  app.use(express.static(join(__dirname, "../../client/build")));
   app.get("/*", (req, res) => {
-    res.sendFile(join(__dirname, "../client/build/index.html"));
+    res.sendFile(join(__dirname, "../../client/build/index.html"));
   });
 }
 
