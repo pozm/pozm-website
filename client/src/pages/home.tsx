@@ -4,7 +4,7 @@ import DiscordUser from "../components/discordUser";
 import bo_pfp from "../images/discord/bo.gif"
 import bl_pfp from "../images/discord/bl.png"
 import ds_pfp from "../images/discord/ds.webp"
-import az_pfp from "../images/discord/az.gif"
+import az_pfp from "../images/discord/as.gif"
 import ha_pfp from "../images/discord/ha.gif"
 import pi_pfp from "../images/discord/pi.webp"
 import userContext from "../hooks/userContext";
@@ -57,12 +57,12 @@ export const Home: React.FC<Props> = () => {
         <div className="row align-items-center my-5" style={{justifyContent:"center",flexFlow:"column"}}>
           <div className="col-lg-5">
             <h1 className="font-weight-light">Some cool people</h1>
-            <DiscordUser avatar = {bo_pfp} userName='Bork' />
-            <DiscordUser avatar = {bl_pfp} userName='Yow' />
-            <DiscordUser avatar = {ds_pfp} userName='Dsf' />
-            <DiscordUser avatar = {az_pfp} userName='Astroz' />
-            <DiscordUser avatar = {ha_pfp} userName='Harmer' />
-            <DiscordUser avatar = {pi_pfp} userName='pickl' />
+            <DiscordUser avatar = {bo_pfp} userName='Bork' reff="https://discord.gg/GGeB7Q4" />
+            <DiscordUser avatar = {bl_pfp} userName='Yow' reff="https://twitter.com/bluedogz162" />
+            <DiscordUser avatar = {ds_pfp} userName='Dsf' reff="https://twitter.com/dsfwastaken" />
+            <DiscordUser avatar = {az_pfp} userName='Astroz' reff="https://twitter.com/AstrozTm" />
+            <DiscordUser avatar = {ha_pfp} userName='Harmer' tag="1111" />
+            <DiscordUser avatar = {pi_pfp} userName='pickl' tag="6609" />
           </div>
         </div>
         <small> {data?.user?.ID ? <Link to="Other" >View other content</Link> : 'Sign in to access more!'} </small>
