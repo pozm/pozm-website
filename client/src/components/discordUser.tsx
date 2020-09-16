@@ -3,11 +3,11 @@ import "../styles/discordUser.css";
 import "../styles/utils.css";
 
 type Props= {
-  size :string | number | undefined
-  avatar : string
-  text : string
-  tag: string
-  reff : string
+  size? :string | number | undefined
+  avatar? : string
+  text? : string
+  tag?: string
+  reff? : string
   userName :string
 
 };

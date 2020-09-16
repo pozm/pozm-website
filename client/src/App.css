@@ -65,3 +65,14 @@ hr.light {
   height: 3px;
 
 }
+
+.seper {
+  background: #1c1c1c;
+  height: 5vh;
+  margin: 1vh 0;
+  transition: transform .3s ease;
+}
+.seper:hover {
+  transform: scaleY(1.2);
+  transition: transform .3s ease;
+}

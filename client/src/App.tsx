@@ -1,17 +1,18 @@
 import React, { useMemo, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Navigation from './components/nav';
+import userContext, { userType } from './hooks/userContext';
+import Page401 from './pages/401';
+import Page404 from './pages/404';
+import AccountPage from './pages/account';
+import AdminPage from './pages/admin';
+import Contact from './pages/contact';
+import Grincher from './pages/grincher';
 import Home from './pages/home';
 import Login from './pages/login';
-import Navigation from './components/nav';
-import Signup from './pages/signup';
-import Grincher from './pages/grincher';
-import Contact from './pages/contact';
-import Page404 from './pages/404';
-import WebhookT from './pages/webhookTools';
-import userContext, { userType } from './hooks/userContext';
 import PageOther from './pages/other';
-import Page401 from './pages/401';
-import AccountPage from './pages/account';
+import Signup from './pages/signup';
+import WebhookT from './pages/webhookTools';
 
 type Props = {
 
@@ -59,6 +60,11 @@ const App : React.FC<Props> = ({}) => {
 								path="/account"
 								exact
 								component={() => user?.ID ? <AccountPage /> : <Login/> }
+							/>
+							<Route
+								path="/admin"
+								exact
+								component={() => (user?.PowerID ?? 0) >=5 ? <AdminPage /> : <Page401 msg="You are unauthorized to access this."/> }
 							/>
 							<Route
 								path="/Webhook"

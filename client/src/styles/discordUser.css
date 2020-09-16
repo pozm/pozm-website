@@ -23,7 +23,21 @@
     padding: 7px;
     padding-right: 10px;
     width: auto;
+    transition: transform .3s ease;
 }
+.DiscordUser:hover {
+    transform: scale(1.2);
+    transition: transform .3s ease;
+}
+
 .DiscordUser:not(:last-child) {
     margin-bottom: 10px;
+}
+@media only screen and (max-width: 600px) {
+
+    .DiscordUser:hover {
+        transform: scale(1.05);
+        transition: transform .3s ease;
+    }
+
 }

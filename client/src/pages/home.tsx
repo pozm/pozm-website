@@ -8,8 +8,13 @@ import az_pfp from "../images/discord/az.gif"
 import ha_pfp from "../images/discord/ha.gif"
 import pi_pfp from "../images/discord/pi.webp"
 import userContext from "../hooks/userContext";
-function Home() {
-  let {user} = useContext(userContext);
+type Props= {
+
+};
+
+
+export const Home: React.FC<Props> = () => {
+  let data = useContext(userContext);
   return (
     <div className="home">
       <div className="container">
@@ -44,7 +49,7 @@ function Home() {
             <p>
               I am a programmer.
               I know various different programming langages including most markup langages.
-              Some programming languages i know conclude of python, javascript, typescript, c#, lua, mysql<span hidden>i know it's a query lanuage more than a programming language</span> .
+              Some programming languages i know conclude of python, javascript, typescript, c#, lua, mysql <span style={{fontSize:'0px'}} >(i know it's a query lanuage more than a programming language)</span> .
               Some markup languages i know: html, markdown, css
             </p>
           </div>
@@ -60,7 +65,23 @@ function Home() {
             <DiscordUser avatar = {pi_pfp} userName='pickl' />
           </div>
         </div>
-        <small> {user?.ID ? <Link to="Other" >View other content</Link> : 'Sign in to access more!'} </small>
+        <small> {data?.user?.ID ? <Link to="Other" >View other content</Link> : 'Sign in to access more!'} </small>
+      </div>
+      <div className="seper" />
+      <div className="container" >
+        <div className="row align-items-center my-5" style={{justifyContent:"center",flexFlow:"column"}} >
+          <div className="col-lg-7">
+            <h1 className="font-weight-light"> Projects which i (have / currently) working on </h1>
+              <div style={{padding:'0px 50px'}} >
+                <ul style={{textAlign: "start"}}>
+                  <li> <a href="https://github.com/pozm/Abyss">Discord bot</a> </li>
+                  <li> <a href="https://github.com/pozm/pozm-website">This website</a> </li>
+                  <li> <a href="https://github.com/Bork0038/bot-tools">Bot tools for discord</a> </li>
+                  <li> Private things </li>
+                </ul>
+              </div>
+          </div>
+        </div>
       </div>
     </div>
   );

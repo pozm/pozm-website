@@ -6,7 +6,7 @@ type Props= {
 	title : string
 	linkTo: string
 	Desc: string
-	text: string
+	text?: string
 };
 
 

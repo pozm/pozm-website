@@ -1,8 +1,12 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+type Props= {
+  msg:string
+};
 
-function Page401(props) {
-    console.log(props)
+
+export const Page401: React.FC<Props> = (props) => {
+  let loc = useLocation()
   return (
     <div className="home">
       <div className="container" style={{display:'flex',flexFlow:'wrap',justifyContent:'center'}}>
@@ -11,7 +15,7 @@ function Page401(props) {
             <h1 className="font-weight-light">401</h1>
             <p style={{fontSize:'small'}} >(Unauthorized)</p>
             <div>
-                Unfortunately you don't have access to <b> {props.location.pathname}</b>.<br/>
+                Unfortunately you don't have access to <b> {loc.pathname}</b>.<br/>
                 message : {props.msg || 'No message'} <br/><br/>
                 some common reasons/issuses:<br/>
               <ol style={{textAlign:'initial'}}>
@@ -27,4 +31,4 @@ function Page401(props) {
   );
 }
 
-export default withRouter(Page401);
+export default Page401
