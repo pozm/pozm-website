@@ -10,6 +10,7 @@ function Login() {
   let {user, setUser} = useContext(userContext);
 
 	async function LoginFunc(e, state) {
+		console.log(state)
 		if (!Object.values(state).some((v) => v === ""))
 			return (
 				(ref.current.hidden = false),
@@ -49,7 +50,7 @@ function Login() {
 				<AccountForm
 					recaptchaRef={recaptcha}
 					helperMsgRef={ref}
-					Login="true"
+					Login={true}
 					SubmitFunc={LoginFunc}
 				/>
 			</div>

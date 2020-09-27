@@ -2,7 +2,7 @@
     width: 5rem;
     height: 100vh;
     position: fixed;
-    background-color: var(--dark);
+    background-color: #1b5c9c;
     transition: width 600ms ease;
     z-index: 1;
 }

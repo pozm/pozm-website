@@ -8,6 +8,7 @@ import az_pfp from "../images/discord/as.gif"
 import ha_pfp from "../images/discord/ha.gif"
 import pi_pfp from "../images/discord/pi.webp"
 import userContext from "../hooks/userContext";
+import { Carousel } from "rsuite";
 type Props= {
 
 };
@@ -20,19 +21,11 @@ export const Home: React.FC<Props> = () => {
       <div className="container">
         <div className="row align-items-center my-5">
           <div className="col-lg-7">
-            <div id="carousel" className="carousel slide" data-ride="carousel">
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <img src="https://i.imgur.com/iiwrpw6.png" height="280px" style={{objectFit:'cover'}} className="d-block w-100  rounded" alt="http://placehold.it/900x400"/>
-                </div>
-                <div className="carousel-item">
-                  <img src="https://i.imgur.com/6mnqNMX.png" height="280px" style={{objectFit:'cover'}} className="d-block w-100  rounded" alt="http://placehold.it/900x400"/>
-                </div>
-                <div className="carousel-item">
-                  <img src="https://i.imgur.com/WcSUO02.png"  height="280px" style={{objectFit:'cover'}} className="d-block w-100 rounded" alt="http://placehold.it/900x400"/>
-                </div>
-              </div>
-            </div>
+            <Carousel autoplay className="custom-slider">
+              <img src="https://i.imgur.com/iiwrpw6.png" height="280px" style={{objectFit:'cover'}} className="d-block  rounded" alt="http://placehold.it/900x400"/>
+              <img src="https://i.imgur.com/6mnqNMX.png" height="280px" style={{objectFit:'cover'}} className="d-block  rounded" alt="http://placehold.it/900x400"/>
+              <img src="https://i.imgur.com/WcSUO02.png"  height="280px" style={{objectFit:'cover'}} className="d-block rounded" alt="http://placehold.it/900x400"/>
+            </Carousel>
           </div>
           <div className="col-lg-5">
             <h1 className="font-weight-light">Home</h1>

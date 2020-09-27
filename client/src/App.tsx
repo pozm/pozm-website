@@ -7,12 +7,14 @@ import Page404 from './pages/404';
 import AccountPage from './pages/account';
 import AdminPage from './pages/admin';
 import Contact from './pages/contact';
+import TheCollection from './pages/coolPage';
 import Grincher from './pages/grincher';
 import Home from './pages/home';
 import Login from './pages/login';
 import PageOther from './pages/other';
 import Signup from './pages/signup';
 import WebhookT from './pages/webhookTools';
+
 
 type Props = {
 
@@ -60,6 +62,11 @@ const App : React.FC<Props> = ({}) => {
 								path="/account"
 								exact
 								component={() => user?.ID ? <AccountPage /> : <Login/> }
+							/>
+							<Route
+								path="/TheCollection"
+								exact
+								component={() => user?.ID ? <TheCollection /> : <Login/> }
 							/>
 							<Route
 								path="/admin"

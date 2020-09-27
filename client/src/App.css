@@ -1,11 +1,12 @@
+@import '~rsuite/dist/styles/rsuite-dark.css';
 .App {
   text-align: center;
 }
 
-[data-theme=dark] {
+/* [data-theme=dark] {
   color: #bebebe;
-  background-color: #222;
-}
+  background-color: #00bcd4;
+} */
 html {
   scroll-behavior: smooth;
 }
@@ -67,7 +68,7 @@ hr.light {
 }
 
 .seper {
-  background: #1c1c1c;
+  background: #0d1015;
   height: 5vh;
   margin: 1vh 0;
   transition: transform .3s ease;
