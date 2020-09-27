@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import data from "../JSON-Data/h.json"
+// import data from "../JSON-Data/h.json"
 type Props= {
 };
 
