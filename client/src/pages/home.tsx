@@ -64,15 +64,7 @@ export const Home: React.FC<Props> = () => {
       <div className="container" >
         <div className="row align-items-center my-5" style={{justifyContent:"center",flexFlow:"column"}} >
           <div className="col-lg-7">
-            <h1 className="font-weight-light"> Projects which i (have / currently) working on </h1>
-              <div style={{padding:'0px 50px'}} >
-                <ul style={{textAlign: "start"}}>
-                  <li> <a href="https://github.com/pozm/Abyss">Discord bot</a> </li>
-                  <li> <a href="https://github.com/pozm/pozm-website">This website</a> </li>
-                  <li> <a href="https://github.com/Bork0038/bot-tools">Bot tools for discord</a> </li>
-                  <li> Private things </li>
-                </ul>
-              </div>
+            ????
           </div>
         </div>
       </div>
