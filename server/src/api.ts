@@ -48,7 +48,8 @@ APIRouter.post('/CreateAccount', async (req,res) => {
         else {
 
             let hash = crypto.createHash('sha512').update(Password);
-            con.query('insert into \`whitelist\`.\`account\` (Username,Password,Email,RegisteredIP,LastIP, KEYID,PowerID) values (?, ?, ?, ?,?,?,?)', [UserName,hash.digest('hex'),Email, req.ip,req.ip,key,keydata[0]?.PowerID ?? 0]);
+            let hashedIp = crypto.createHash('sha512').update(req.ip).digest('hex');
+            con.query('insert into \`whitelist\`.\`account\` (Username,Password,Email,RegisteredIP,LastIP, KEYID,PowerID) values (?, ?, ?, ?,?,?,?)', [UserName,hash.digest('hex'),Email, hashedIp,hashedIp,key,keydata[0]?.PowerID ?? 0]);
             con.query('update `whitelist`.`keycode` set Registered=1,CreatedAT=current_timestamp where KEYID=?', key);
             (req.session as Express.Session).logedInto = await getIdFromUser(UserName)
             res.send(JSON.stringify({'message':'sucessfully logged in'}))
