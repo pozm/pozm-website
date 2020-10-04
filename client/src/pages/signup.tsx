@@ -1,25 +1,41 @@
 import React, { useContext } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Redirect, useLocation } from "react-router-dom";
 import AccountForm from "../components/AccountForm";
 import userContext from "../hooks/userContext";
 import Page404 from "./404";
 
-let ref = React.createRef();
-let recaptcha = React.createRef();
+let ref = React.createRef<HTMLDivElement>();
+let recaptcha = React.createRef<ReCAPTCHA>();
 
-function Signup(props) {
+type Props= {
 
-  let {user, setUser} = useContext(userContext);
+};
+
+
+const Signup :React.FC<Props> = (props) => {
+
+  let UserContext = useContext(userContext);
   let location = useLocation()
   let search = new URLSearchParams(location.search)
   let key = search.get('key')
 
-  async function CreateAccount(e, state) {
+  async function CreateAccount(e :React.FormEvent<HTMLFormElement> | undefined, state : object | undefined ) {
+    if (!state) {
+      if (ref.current) {
+        ref.current.hidden = false;
+        ref.current.innerText = "Missing values.";
+      }
+      return;
+    }
     if (!Object.values(state).every((v) => v !== ""))
-      return (
-        (ref.current.hidden = false),
-        (ref.current.innerText = "Missing values.")
-      );
+    {
+      if (ref.current) {
+        ref.current.hidden = false;
+        ref.current.innerText = "Missing values."
+      }
+      return;
+    }
     let data = await fetch("/api/createAccount", {
       body: JSON.stringify({...state,key}),
       mode: "same-origin",
@@ -29,12 +45,15 @@ function Signup(props) {
       fetch("/api/getUser")
         .then((res) => res.json())
         .then((out) => {
-          if (!out.error && out.data) setUser(out.data);
+          if (!out.error && out.data) UserContext?.setUser(out.data);
         });
     } else {
-      ref.current.hidden = false;
-      ref.current.innerText = (await data.json()).message;
-      recaptcha.current.reset();
+      if (ref.current) 
+      {
+        ref.current.hidden = false;
+        ref.current.innerText = (await data.json()).message;
+      }
+      recaptcha.current?.reset();
     }
   }
 	return (
@@ -49,7 +68,7 @@ function Signup(props) {
 					paddingTop: "30px",
 				}}
 			>
-        {user?.ID && <Redirect from="/Signup" to="/" />}
+        {UserContext?.user?.ID && <Redirect from="/Signup" to="/" />}
         <div >
           <h2>Using key : {key} </h2>
           <AccountForm
@@ -57,7 +76,7 @@ function Signup(props) {
             style={{width:'fit-content'}}
             recaptchaRef={recaptcha}
             helperMsgRef={ref}
-            Login="false"
+            Login={false}
             SubmitFunc={CreateAccount}
           />
         </div>
@@ -66,5 +85,4 @@ function Signup(props) {
 		</div>
 	);
 }
-
-export default Signup;
+export default Signup

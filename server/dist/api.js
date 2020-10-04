@@ -44,6 +44,7 @@ APIRouter.get('/getUser', async (req, res) => {
     }
 });
 APIRouter.post('/CreateAccount', async (req, res) => {
+    let ip = req.ip;
     if (!req.body['Recaptcha'])
         return res.json({ error: 21, message: 'Please complete the recaptcha' });
     var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + keys_1.keys.recapSiteKey + "&response=" + req.body['Recaptcha'] + "&remoteip=" + req.connection.remoteAddress;
@@ -70,8 +71,10 @@ APIRouter.post('/CreateAccount', async (req, res) => {
             return res.status(400).send(JSON.stringify({ 'error': 10, message: `${0 in resu.filter((v) => v.email == Email) ? 'Email' : 'Username'} is already in use.` }));
         }
         else {
+            let encEmail = crypto.createCipheriv("aes-256-gcm", keys_1.keys.EncryptionBase + UserName, Email);
             let hash = crypto.createHash('sha512').update(Password);
-            _1.con.query('insert into \`whitelist\`.\`account\` (Username,Password,Email,RegisteredIP,LastIP, KEYID,PowerID) values (?, ?, ?, ?,?,?,?)', [UserName, hash.digest('hex'), Email, req.ip, req.ip, key, keydata[0]?.PowerID ?? 0]);
+            let hashedIp = crypto.createHash('sha512').update(req.ip).digest('hex');
+            _1.con.query('insert into \`whitelist\`.\`account\` (Username,Password,Email,RegisteredIP,LastIP, KEYID,PowerID) values (?, ?, ?, ?,?,?,?)', [UserName, hash.digest('hex'), encEmail.final().toString("hex"), hashedIp, hashedIp, key, keydata[0]?.PowerID ?? 0]);
             _1.con.query('update `whitelist`.`keycode` set Registered=1,CreatedAT=current_timestamp where KEYID=?', key);
             req.session.logedInto = await utils_1.getIdFromUser(UserName);
             res.send(JSON.stringify({ 'message': 'sucessfully logged in' }));

@@ -1,5 +1,6 @@
 import $ from "jquery";
 import React from "react";
+import { Notification } from "rsuite";
 import userContext from "../hooks/userContext";
 
 let regx = /^https:\/\/(canary|ptb)?\.?discord(app)?\.com\/api\/webhooks\/(?<id>\d+)\/(?<secret>\S*)$/mi
@@ -43,9 +44,16 @@ class WebhookT extends React.Component {
             crossDomain:true,
             success: (valu,status,res)=> {
                 this.setState({URL:val,isUrlValid:true, webhookData: valu}, () => window.$(informationRef.current).collapse('show') )
+                // $('#hlp').addClass("d-none")
             },
             error: () => {
                 this.setState({URL:'val',isUrlValid:false, webhookData:{}}, () => window.$(informationRef.current).collapse('hide') )
+                Notification.error({
+                    title:"Invalid webhook",
+                    description:`The webhook you provided is invalid.`
+                })
+                // $('#hlp').removeClass("d-none").text("You have provided an invalid URL.")
+                // setTimeout(()=>$('#hlp').addClass("d-none"),3e3)
             }
         })
     }
@@ -73,6 +81,10 @@ class WebhookT extends React.Component {
             crossDomain:true,
             success:(val)=>{
                 this.setState({webhookData:val})
+                Notification.success({
+                    title:"Modified webhook",
+                    description:`Successfully modified the webhook with new data as ${ { name : [data.name] }.toString() }`
+                })
             }
         })
         
@@ -91,6 +103,10 @@ class WebhookT extends React.Component {
             method:'POST',
             success:(val)=>{
                 console.log('successfully sent')
+                Notification.success({
+                    title:"Sent data to webhook",
+                    description:`Successfully sent data to the webhook.`
+                })
             }
         })
         
@@ -105,6 +121,10 @@ class WebhookT extends React.Component {
                 console.log('successfully deleted')
                 window.$(informationRef.current).collapse('hide')
                 this.setState({URL:'',isUrlValid:false,webhookData:{}})
+                Notification.success({
+                    title:"Deleted webhook",
+                    description:`Successfully deleted the webhook.`
+                })
             }
         })
     }
@@ -148,7 +168,7 @@ class WebhookT extends React.Component {
                                         <img src={`https://cdn.discordapp.com/avatars/${this.state.webhookData?.id}/${this.state.webhookData?.avatar}.png?size=128`} alt="no avatar" />
                                     </div>
                                 </div>
-                                <div className="form-group clearfix row" style={{display:'flex'}} >
+                                <div className="form-group clearfix row my-0" style={{display:'flex'}} >
                                     <div className="col-lg-5 collapse modificationControls" >
                                         <input type="button" onClick={this.onSend} className="btn btn-success modificationControls float-left" disabled={this.state.isUrlValid ? false : true}  value="send"/>
                                         <input type="button" onClick={this.onModify} className="btn btn-warning modificationControls float-left ml-1" disabled={this.state.isUrlValid ? false : true}  value="Modify"/>
@@ -158,6 +178,7 @@ class WebhookT extends React.Component {
                                         <input type="button" className="btn btn-info float-right" data-toggle="collapse" data-target=".modificationControls" disabled={this.state.isUrlValid ? false : true}  value="Toggle more"/>
                                     </div>
                                 </div>
+                                <p id = "hlp" className="text-danger d-none" > test </p>
                             </form>
                         </div>
                     </div>

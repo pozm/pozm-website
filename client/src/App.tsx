@@ -10,8 +10,10 @@ import Contact from './pages/contact';
 import TheCollection from './pages/coolPage';
 import Grincher from './pages/grincher';
 import Home from './pages/home';
+import Legal from './pages/legal';
 import Login from './pages/login';
 import PageOther from './pages/other';
+import RtxC from './pages/rtxChecker';
 import Signup from './pages/signup';
 import WebhookT from './pages/webhookTools';
 
@@ -44,6 +46,11 @@ const App : React.FC<Props> = ({}) => {
 								component={() => <Contact />}
 							/>
 							<Route
+								path="/legal"
+								exact
+								component={() => <Legal />}
+							/>
+							<Route
 								path="/grincher"
 								exact
 								component={() => <Grincher />}
@@ -57,6 +64,11 @@ const App : React.FC<Props> = ({}) => {
 								path="/Login"
 								exact
 								component={() => <Login />}
+							/>
+							<Route
+								path="/rtx"
+								exact
+								component={() => <RtxC />}
 							/>
 							<Route
 								path="/account"

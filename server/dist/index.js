@@ -94,9 +94,9 @@ exports.asyncQuery = asyncQuery;
 // app.use('/graphql',mw)
 app.use("/api", api_1.APIRouter);
 if (type) {
-    app.use(express.static(path_1.join(__dirname, "../client/build")));
+    app.use(express.static(path_1.join(__dirname, "../../client/build")));
     app.get("/*", (req, res) => {
-        res.sendFile(path_1.join(__dirname, "../client/build/index.html"));
+        res.sendFile(path_1.join(__dirname, "../../client/build/index.html"));
     });
 }
 app.listen(type ? 80 : 5000, () => console.log(`server listening on port ${type ? 80 : 5000}`));

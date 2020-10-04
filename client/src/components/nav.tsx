@@ -27,6 +27,8 @@ function parsePathToKey(p : string) {
 			return "4-2"
 		case "/webhook":
 			return "3-5"
+		case "/legal":
+			return "5-1"
 		default:
 			return "1"
 	}
@@ -92,6 +94,14 @@ export const NavComp: React.FC<Props> = ({}) => {
 			case "4-3":
 				signout();
 			break;
+			
+			
+			// 5
+			
+			
+			case "5-1":
+				history.push('/legal')
+			break;
 
 			default:
 				history.push('/');
@@ -134,11 +144,15 @@ export const NavComp: React.FC<Props> = ({}) => {
 						<Dropdown.Item eventKey="3-5"> Webhook tools </Dropdown.Item>
 						<Dropdown.Item disabled eventKey="3-6"> Lua deobfuscator </Dropdown.Item>
 					</Dropdown>
-					  	<Dropdown eventKey="4" title="Account" icon={<Icon icon="user" />}>
-							{ uv?.user?.ID ? (<Dropdown.Item disabled > Signed in as {uv.user.Username} </Dropdown.Item> ) : (<Dropdown.Item eventKey="4-1" > Sign In </Dropdown.Item> ) }
-							{ uv?.user?.ID  && (<Dropdown.Item eventKey="4-2">View Content</Dropdown.Item>)}
-							{ uv?.user?.ID  && (<Dropdown.Item eventKey="4-3">Sign Out</Dropdown.Item>)}
-					  	</Dropdown>
+					<Dropdown eventKey="4" title="Account" icon={<Icon icon="user" />}>
+						{ uv?.user?.ID ? (<Dropdown.Item disabled > Signed in as {uv.user.Username} </Dropdown.Item> ) : (<Dropdown.Item eventKey="4-1" > Sign In </Dropdown.Item> ) }
+						{ uv?.user?.ID  && (<Dropdown.Item eventKey="4-2">View Content</Dropdown.Item>)}
+						{ uv?.user?.ID  && (<Dropdown.Item eventKey="4-3">Sign Out</Dropdown.Item>)}
+					</Dropdown>
+					
+					<Dropdown eventKey="5" title="Other" icon={<Icon icon="question" />}>
+						<Dropdown.Item eventKey="5-1" icon={<Icon icon="exclamation" />} > Legal </Dropdown.Item>
+					</Dropdown>
 					
 				</Nav>
 		  	</Sidenav.Body>
