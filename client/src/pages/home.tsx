@@ -11,6 +11,7 @@ import st_pfp from "../images/discord/st.png"
 import at_pfp from "../images/discord/at.png"
 import pi_pfp from "../images/discord/pi.webp"
 import fa_pfp from "../images/discord/fa.png"
+import ka_pfp from "../images/discord/ka.png"
 import userContext from "../hooks/userContext";
 type Props= {
 
@@ -68,8 +69,9 @@ export const Home: React.FC<Props> = () => {
             <DiscordUser style={{ transformOrigin: "left center" }}   className="col-4 mx-1" avatar = {pi_pfp} userName='pickl' tag="6609" />
             <DiscordUser style={{ transformOrigin: "right center" }}  className="col-4 mx-1" avatar = {sh_pfp} userName='Shawn' tag="2000" />
             <DiscordUser style={{ transformOrigin: "left center" }}   className="col-4 mx-1" avatar = {at_pfp} userName='autist69420' tag="2047" />
-            <DiscordUser style={{ transformOrigin: "right top" }}    className="col-4 mx-1" avatar = {st_pfp} userName='Stan' tag="9415" />
-            <DiscordUser style={{ transformOrigin: "left top" }}    className="col-4 mx-1" avatar = {fa_pfp} userName='fate' tag="3314" />
+            <DiscordUser style={{ transformOrigin: "right center" }}    className="col-4 mx-1" avatar = {st_pfp} userName='Stan' tag="9415" />
+            <DiscordUser style={{ transformOrigin: "left center" }}    className="col-4 mx-1" avatar = {fa_pfp} userName='fate' tag="3314" />
+            <DiscordUser style={{ transformOrigin: "center top" }}    className="col-4 mx-1" avatar = {ka_pfp} userName='kanner' tag="9716" />
           </div>
         </div>
       </div>
