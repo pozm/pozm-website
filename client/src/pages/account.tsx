@@ -26,6 +26,7 @@ export const AccountPage: React.FC<Props> = () => {
 					style={{ display: 'flex', justifyContent: 'center' }}
 				>
 					<InfoBox linkTo="webhook" title="Webhook" Desc="Manage discord webhooks easily" />
+					<InfoBox linkTo="TheCollection" title="The collection" Desc="oh yes." />
 					{(uv?.user?.PowerID ?? 0) >= 5 && <InfoBox linkTo="admin" title="Admin" Desc="The admin panel" />}
 				</div>
 			</div>

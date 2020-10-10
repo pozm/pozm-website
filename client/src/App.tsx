@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navigation from './components/nav';
 import userContext, { userType } from './hooks/userContext';
@@ -25,7 +25,8 @@ type Props = {
 const App : React.FC<Props> = ({}) => {
 	const [user, setUser] = useState<userType>(null);
 
-	useMemo(() => {
+	useEffect(() => {
+		if (user?.ID) return;
 		fetch('/api/getUser')
 			.then((res) => res.json())
 			.then((out) => {
@@ -76,7 +77,7 @@ const App : React.FC<Props> = ({}) => {
 								component={() => user?.ID ? <AccountPage /> : <Login/> }
 							/>
 							<Route
-								path="/TheCollection"
+								path="/TheCollection/:id?"
 								exact
 								component={() => user?.ID ? <TheCollection /> : <Login/> }
 							/>

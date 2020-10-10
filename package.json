@@ -11,7 +11,7 @@
     "client": "npm start --prefix client",
     "cbuild":"cd ./client/ && npm run build",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "prod": "concurrently \"npm run serverp\" \"cd ./client/ && npm run build\""
+    "prod": "set PUBLIC_URL=/&& concurrently \"npm run serverp\" \"cd ./client/ && npm run build\""
   },
   "keywords": [],
   "author": "",

@@ -9,12 +9,14 @@ type Props= {
   tag?: string
   reff? : string
   userName :string
+  className? : string
+  style? : React.CSSProperties
 
 };
 
-export const DiscordUser: React.FC<Props> = ({size,text,avatar,reff,tag,userName}) => {
+export const DiscordUser: React.FC<Props> = ({size,text,avatar,reff,tag,userName,className,style}) => {
   return (
-    <div className="DiscordUser">
+    <div style={style} className={`DiscordUser ${className ??""}`}>
       <div
         className="avatarParent"
         style={{ marginBottom: text ? "10px" : "0px", justifyContent:!avatar && !tag ? 'center' : 'initial' }}

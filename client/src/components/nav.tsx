@@ -110,7 +110,7 @@ export const NavComp: React.FC<Props> = ({}) => {
 	},[])
 
 	return (
-	<div style={{ width: (isMobile && navState.expanded ) ? "100%": 250, position:"fixed", height:"100vh", top:0,zIndex:10 }}>
+	<div style={{ width: (isMobile && navState.expanded ) ? "100%": !isMobile ? 250 : 56, position:"fixed", height:"100vh", top:0,zIndex:10 }}>
 			<Button style={{
 				display:"flex",
 				borderRadius:"0px 6px 6px 0px",

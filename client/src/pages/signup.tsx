@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 import AccountForm from "../components/AccountForm";
 import userContext from "../hooks/userContext";
 import Page404 from "./404";
@@ -19,6 +19,7 @@ const Signup :React.FC<Props> = (props) => {
   let location = useLocation()
   let search = new URLSearchParams(location.search)
   let key = search.get('key')
+  let History = useHistory()
 
   async function CreateAccount(e :React.FormEvent<HTMLFormElement> | undefined, state : object | undefined ) {
     if (!state) {
@@ -45,6 +46,7 @@ const Signup :React.FC<Props> = (props) => {
       fetch("/api/getUser")
         .then((res) => res.json())
         .then((out) => {
+          console.log(out,out.data)
           if (!out.error && out.data) UserContext?.setUser(out.data);
         });
     } else {

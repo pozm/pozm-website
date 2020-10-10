@@ -38,21 +38,25 @@ function Login() {
 	return (
 		<div className="home">
 			<div
-				className="container"
+				className="container my-5"
+			>
+			{user?.ID && <Redirect from="/Login" to="/" />}
+				<div
 				style={{
 					display: "flex",
 					flexFlow: "wrap",
 					justifyContent: "center",
-					paddingTop: "30px",
-				}}
-			>
-        {user?.ID && <Redirect from="/Login" to="/" />}
-				<AccountForm
-					recaptchaRef={recaptcha}
-					helperMsgRef={ref}
-					Login={true}
-					SubmitFunc={LoginFunc}
-				/>
+				}}>
+					
+					<AccountForm
+						recaptchaRef={recaptcha}
+						helperMsgRef={ref}
+						Login={true}
+						SubmitFunc={LoginFunc}
+					/>
+				</div>
+				<h1>Looking to sign up?</h1>
+				<p>Now you need to contact me to get a key to sign up.</p>
 			</div>
 		</div>
 	);

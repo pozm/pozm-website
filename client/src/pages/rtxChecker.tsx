@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { Product, RootObject } from "../types/stockAPI";
+import { rtxStock } from "../types/stockAPI";
 // import data from "../JSON-Data/h.json"
 type Props= {
     
@@ -46,7 +46,7 @@ export const localeMap : KnownGPUs = {
 
 export const RtxC: React.FC<Props> = (props) => {
     let loc = useLocation()
-    let m : Map<string,Product|string> = new Map
+    let m : Map<string,rtxStock.Product|string> = new Map
     useMemo(()=>{
 
         let locale = (window.navigator.language.toLowerCase()) as keyof KnownLocales
@@ -62,7 +62,7 @@ export const RtxC: React.FC<Props> = (props) => {
                 console.log("aaaaa")
 
                 if (value.ok) {
-                    value.json().then((v : RootObject) => {
+                    value.json().then((v : rtxStock.RootObject) => {
                         if (v?.products) {
 
                             console.log("passed")

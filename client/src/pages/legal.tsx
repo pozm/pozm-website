@@ -33,6 +33,7 @@ export const Legal: React.FC<Props> = (props) => {
                         By creating an account you agree to having this data stored.
                         If you want to delete your account you can do that by contacting me via a way @ <Link to="/contact" > contact page </Link>.<br/>
                         None of the data we store gets sold to third parties.
+                        We store Ips so that don't have to deal with people making multiple accounts and flooding my api / website & allows me to more effectively take actions on users doing this. 
                     </p>
                 </div>
             </div>
