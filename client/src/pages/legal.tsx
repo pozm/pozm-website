@@ -36,6 +36,12 @@ export const Legal: React.FC<Props> = (props) => {
                         We store Ips so that don't have to deal with people making multiple accounts and flooding my api / website & allows me to more effectively take actions on users doing this. 
                     </p>
                 </div>
+                <div className="row align-items-center my-2 mx-lg-5">
+                    <p style={{wordBreak:"break-word", wordWrap:"break-word" }} >
+                        Within the collection there is multiple images & categories, i am not responsible for hosting them nor if they include sensitive content.
+                        Leaking content from the collection will result in account termination.
+                    </p>
+                </div>
             </div>
         </div>
     );

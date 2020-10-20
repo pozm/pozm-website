@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { Input, Panel } from 'rsuite';
+import { Alert, Button, Input, Panel } from 'rsuite';
 
 type Props = {
 	helperMsg?: string;
 	recaptchaRef?: React.RefObject<ReCAPTCHA>;
-	helperMsgRef?: React.RefObject<HTMLDivElement>;
 	Login?: boolean;
 	SubmitFunc: (event?: React.FormEvent<HTMLFormElement>, state?:{Email:string,UserName:string,Password:string,Recaptcha:string}) => void;
 	style?: React.CSSProperties;
@@ -35,8 +34,7 @@ const AccountForm: React.FC<Props> = (props) => {
 		setState({...state, Recaptcha: Token ?? ''  });
 	}
 	const onError = () => {
-		if (!props?.helperMsgRef?.current) return;
-		props.helperMsgRef.current.innerText = 'Could you refresh the page and attempt the recaptcha again'
+		Alert.error("Could you refresh the page and attempt the recaptcha again")
 	}
 	return (
 		<Panel bordered>
@@ -82,25 +80,24 @@ const AccountForm: React.FC<Props> = (props) => {
 						onChange={handleChange}
 					/>
 				</div>
-				<ReCAPTCHA
-					sitekey="6Lek7ccZAAAAAG5Db1MtPm5Z3woVvoO-uWdpJwIj"
-					ref={props.recaptchaRef}
-					theme="dark"
-					size="normal"
-					onErrored={onError}
-					onExpired={onError}
-					onChange={handleChangeRE}
-				/>
+				<div style={{justifyContent:"center",display:"flex"}} >  
+					<ReCAPTCHA
+						type="image"
+						badge="inline"
+						
+						sitekey="6Lek7ccZAAAAAG5Db1MtPm5Z3woVvoO-uWdpJwIj"
+						ref={props.recaptchaRef}
+						theme="dark"
+						size="normal"
+						onErrored={onError}
+						onExpired={onError}
+						onChange={handleChangeRE}
+					/>
+				</div>
 				<br />
-				<div
-					className="alert alert-danger"
-					role="alert"
-					ref={props.helperMsgRef}
-					hidden
-				/>
-				<button className="btn btn-primary" type="submit">
+				<Button type="submit">
 					Submit
-				</button>
+				</Button>
 			</form>
 		</Panel>
 	);

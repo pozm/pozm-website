@@ -40,9 +40,14 @@ hr {
 
 }
 
+@keyframes FadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
 
 .main {
-  margin-left: 56px;
+  animation-name: FadeIn;
+  animation-duration: 1s;
 } 
 
 @media only screen and (max-width: 600px) {

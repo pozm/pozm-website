@@ -1,35 +1,62 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import DiscordUser from "../components/discordUser";
+import React, {useContext} from "react";
 import userContext from "../hooks/userContext";
-import az_pfp from "../images/discord/as.gif";
-import at_pfp from "../images/discord/at.png";
-import bo_pfp from "../images/discord/bo.gif";
-import ds_pfp from "../images/discord/ds.webp";
-import ha_pfp from "../images/discord/ha.gif";
-import ka_pfp from "../images/discord/ka.png";
-import pe_pfp from "../images/discord/pe.gif";
-import bl_pfp from "../images/discord/bl.gif";
-import bu_pfp from "../images/discord/bu.png";
-import pi_pfp from "../images/discord/pi.webp";
-type Props= {
+import DiscordUser from "../components/discordUser";
 
-};
+import bork_pfp from "../images/discord/bo.gif"
+import buki_pfp from "../images/discord/bu.png"
+import perth_pfp from "../images/discord/pe.gif"
+import blorain_pfp from "../images/discord/bl.gif"
+import kanner_pfp from "../images/discord/ka.png"
+import {useMediaQuery} from "react-responsive";
+
+type Props = {};
 
 
 export const Home: React.FC<Props> = () => {
-  let data = useContext(userContext);
-  return (
-    <div className="home">
-      <div className="jumbotron">
-        <h1 className="display-4">Hello, world!</h1>
-        <p className="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-        <hr className="my-4"/>
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-        <a className="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-      </div>
-    </div>
-  );
+    let data = useContext(userContext);
+    const isMobile = useMediaQuery({query: '(max-width: 760px)'});
+    return (
+        <div className={"home"}>
+            <div className="jumbotron my-2">
+                <h1 className="display-3">Hello{data?.user?.ID && `, ${data.user.Username}`}</h1>
+                <p className="lead">Welcome to my website.</p>
+                <hr className="my-4"/>
+                <p>This is not a template, fuck you.</p>
+            </div>
+            <div className="row justify-content-md-center">
+                <div className={`col col-${isMobile?12:3}`}>
+
+                    <h1 className={"font-weight-light"}>So like who are you?</h1>
+                    <p>well uhh im a programmer focused in js,c#,c++,py, and more. Im currently a developer at <a
+                        href={"https://discord.gg/psu"}>PSU</a></p>
+                </div>
+                <div className="col col-lg-4">
+
+                    <h1 className={"font-weight-light"}>Some cool people</h1>
+                    <div className={`row justify-content-md-center row-cols-${isMobile? 1 : 2}`}>
+                        <div className={"col"}>
+                            <DiscordUser userName={"Chris 🗺"} tag={"0411"} avatar={bork_pfp}/>
+                        </div>
+                        <div className={"col"}>
+                            <DiscordUser userName={"Buki"} tag={"1080"} avatar={buki_pfp}/>
+                        </div>
+                        <div className={"col"}>
+                            <DiscordUser userName={"Perth"} tag={"0001"} avatar={perth_pfp}/>
+                        </div>
+                        <div className={"col"}>
+                            <DiscordUser userName={"🎃💀BloRain💀🎃"} tag={"5793"} avatar={blorain_pfp}/>
+                        </div>
+                        <div className={"col"}>
+                            <DiscordUser userName={"kanner"} tag={"9716"} avatar={kanner_pfp}/>
+                        </div>
+
+                    </div>
+                    <p>If you have a invite to this website, consider yourself on this list.</p>
+                </div>
+            </div>
+            <div className={"seper"} />
+        </div>
+    );
 }
 
 export default Home;

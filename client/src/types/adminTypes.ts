@@ -7,7 +7,7 @@ export namespace AdminData {
         Password: string;
         PowerID: number;
         Email: string;
-        RegisteredAT: Date;
+        RegisteredAT: string;
         Subscriptions?: any;
         RegisteredIP: string;
         LastIP: string;

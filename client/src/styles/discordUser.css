@@ -23,14 +23,20 @@
     padding: 7px;
     padding-right: 10px;
     width: auto;
+    /*min-width: 200px;*/
     transition: transform .3s ease;
     margin-bottom: 10px;
 }
-.DiscordUser:hover {
-    transform: scale(1.2);
-    /* margin :  0 10.2rem 20.2rem; */
-    transition: transform .3s ease;
+@media only screen and (min-width: 600px) {
+
+    .DiscordUser:hover {
+        transform: scale(1.1);
+        /* margin :  0 10.2rem 20.2rem; */
+        transition: transform .3s ease;
+    }
+
 }
+
 
 .DiscordUser:not(:last-child) {
     /* margin-bottom: 10px; */
@@ -39,9 +45,8 @@
 
     .DiscordUser:hover {
         transform: scale(1.05);
-        margin : 1.05rem;
+        /*margin : 1.05rem;*/
         transition: transform .3s ease;
-        transition: margin .3s ease;
     }
 
 }

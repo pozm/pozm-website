@@ -12,10 +12,9 @@ export const AccountPage: React.FC<Props> = () => {
     let uv = useContext(userContext);
 	return (
 		<div className="home">
-			<div className="container">
 				<div
 					className="jumbotron my-3"
-					style={{ backgroundColor: '#ffffff11' }}
+					// style={{ backgroundColor: '#ffffff11' }}
 				>
 					<h1> Hi, {uv?.user?.Username}! </h1>
 					<hr className="my-4 light" />
@@ -29,7 +28,6 @@ export const AccountPage: React.FC<Props> = () => {
 					<InfoBox linkTo="TheCollection" title="The collection" Desc="oh yes." />
 					{(uv?.user?.PowerID ?? 0) >= 5 && <InfoBox linkTo="admin" title="Admin" Desc="The admin panel" />}
 				</div>
-			</div>
 		</div>
 	);
 }

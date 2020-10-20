@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { Alert } from "rsuite";
 import AccountForm from "../components/AccountForm";
 import userContext from "../hooks/userContext";
 import Page404 from "./404";
 
-let ref = React.createRef<HTMLDivElement>();
 let recaptcha = React.createRef<ReCAPTCHA>();
 
 type Props= {
@@ -23,18 +23,12 @@ const Signup :React.FC<Props> = (props) => {
 
   async function CreateAccount(e :React.FormEvent<HTMLFormElement> | undefined, state : object | undefined ) {
     if (!state) {
-      if (ref.current) {
-        ref.current.hidden = false;
-        ref.current.innerText = "Missing values.";
-      }
+        Alert.error("Missing values.");
       return;
     }
     if (!Object.values(state).every((v) => v !== ""))
     {
-      if (ref.current) {
-        ref.current.hidden = false;
-        ref.current.innerText = "Missing values."
-      }
+        Alert.error("Missing values.")
       return;
     }
     let data = await fetch("/api/createAccount", {
@@ -46,28 +40,30 @@ const Signup :React.FC<Props> = (props) => {
       fetch("/api/getUser")
         .then((res) => res.json())
         .then((out) => {
-          console.log(out,out.data)
           if (!out.error && out.data) UserContext?.setUser(out.data);
+          else {
+            Alert.error(out.message)
+          }
         });
     } else {
-      if (ref.current) 
-      {
-        ref.current.hidden = false;
-        ref.current.innerText = (await data.json()).message;
-      }
-      recaptcha.current?.reset();
+      data.json().then((jsn)=>{
+        let msg = jsn.message
+        console.log(msg,jsn)
+        Alert.error(msg)
+        recaptcha.current?.reset();
+      })
     }
   }
 	return (
-    <div className="home">
+    <div>
     {key === ''||key===null ? <Page404/> : 
 			<div
-				className="container"
+				className="container home my-5"
 				style={{
-					display: "flex",
+					// display: "flex",
 					flexFlow: "wrap",
 					justifyContent: "center",
-					paddingTop: "30px",
+					// paddingTop: "30px",
 				}}
 			>
         {UserContext?.user?.ID && <Redirect from="/Signup" to="/" />}
@@ -75,9 +71,8 @@ const Signup :React.FC<Props> = (props) => {
           <h2>Using key : {key} </h2>
           <AccountForm
             className="mx-auto"
-            style={{width:'fit-content'}}
+            // style={{width:'fit-content'}}
             recaptchaRef={recaptcha}
-            helperMsgRef={ref}
             Login={false}
             SubmitFunc={CreateAccount}
           />

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import './App.css'
 import App from './App';
-import 'rsuite/lib/styles/themes/dark/index.less';
+// import 'rsuite/lib/styles/themes/dark/index.less';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
