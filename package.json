@@ -9,8 +9,8 @@
     "server": "npm run build && node .",
     "serverp": "npm run build && node . prod",
     "client": "npm start --prefix client",
-    "cbuild":"cd ./client/ && npm run build",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "cbuild":"set PUBLIC_URL=/&&cd ./client/ && npm run build",
+    "dev": "set PUBLIC_URL=/&&concurrently \"npm run server\" \"npm run client\"",
     "prod": "set PUBLIC_URL=/&& concurrently \"npm run serverp\" \"cd ./client/ && npm run build\""
   },
   "keywords": [],

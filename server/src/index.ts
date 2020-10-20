@@ -1,5 +1,5 @@
 import { json, urlencoded } from "body-parser";
-import { createConnection } from "mysql";
+import { Connection, createConnection } from "mysql";
 import { join } from "path";
 // import ExGraphQL = require('express-graphql');
 // import GraphQL = require('graphql');
@@ -71,11 +71,41 @@ const dataStructures = {
     `,
 };
 
-const con = createConnection({
-  host: "localhost",
-  user: "root",
-  password: keys.mysqlPassWord,
-});
+const db_config = {
+    host: "localhost",
+    user: "root",
+    password: keys.mysqlPassWord,
+  }
+
+var con: Connection;
+
+function handleDisconnect(doSkip? : number) { // basically lazy disconnect handling
+  if (!doSkip) con = createConnection(db_config);
+                                  
+
+  con.connect(function(err) {             
+    if(err) {                             
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000); 
+    }                                     
+  });                                                                         
+  con.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();                        
+    } else {                                     
+      throw err;                                 
+    }
+  });
+}
+con = createConnection(db_config);
+handleDisconnect(1);
+
+// let con = createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: keys.mysqlPassWord,
+// });
 
 
 let type = false;
@@ -84,8 +114,6 @@ if (process.argv[2] == "prod") {
 }
 
 console.log("pre : " + type);
-
-let asyncQuery = promisify(con.query);
 
 // var root = { hello: () => 'Hello world!' };
 
@@ -114,4 +142,4 @@ app.listen(type ? 80 : 5000, () =>
   console.log(`server listening on port ${type ? 80 : 5000}`)
 );
 
-export { con, dataStructures, asyncQuery };
+export { con, dataStructures };

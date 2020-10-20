@@ -55,8 +55,7 @@ function Login() {
 						SubmitFunc={LoginFunc}
 					/>
 				</div>
-				<h1>Looking to sign up?</h1>
-				<p>Now you need to contact me to get a key to sign up.</p>
+				<p> dm me for invite if you do not have an account.</p>
 			</div>
 		</div>
 	);

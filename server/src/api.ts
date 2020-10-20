@@ -1,6 +1,6 @@
 import express = require('express')
 import * as crypto from "crypto"
-import { asyncQuery, con, dataStructures } from '.';
+import { con, dataStructures } from '.';
 import { keys } from './keys';
 import got from 'got/dist/source';
 import { AsyncQuery, getDataFromId, getIdFromUser } from './utils';
