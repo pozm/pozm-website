@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Container, Content } from 'rsuite';
+import {Container, Content, Notification} from 'rsuite';
 
 
 import Navigation from './components/nav';
@@ -33,6 +33,14 @@ const App : React.FC<Props> = ({}) => {
 			.then((res) => res.json())
 			.then((out) => {
 				if (!out.error && out.data) setUser(out.data);
+				if (user?.ID && parseInt(window.localStorage.getItem("seenDiscord") ?? "0") < 1) {
+					Notification.open({
+						title: 'Discord',
+						description: <div>You have gained access to join the discord, you may join from <a href={"https://discord.gg/V4Yvqc"} target={"_blank"} >https://discord.gg/V4Yvqc</a></div>,
+						duration:0,
+					});
+					window.localStorage.setItem("seenDiscord", "1")
+				}
 			});
 	}, []);
 	return (

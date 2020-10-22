@@ -15,8 +15,8 @@ function Login() {
 		Password: string;
 		Recaptcha: string;
 	} | undefined ) {
-		if (state?.UserName) {
-			state.UserName = "a"
+		if (state?.UserName == "") {
+			state.UserName = state.Email
 		}
 		console.log(state)
 		if (!state) {

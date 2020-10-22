@@ -1,5 +1,5 @@
 import { json, urlencoded } from "body-parser";
-import { Connection, createConnection } from "mysql";
+import {Connection, ConnectionConfig, createConnection} from "mysql";
 import { join } from "path";
 // import ExGraphQL = require('express-graphql');
 // import GraphQL = require('graphql');
@@ -71,10 +71,11 @@ const dataStructures = {
     `,
 };
 
-const db_config = {
+const db_config : string | ConnectionConfig = {
     host: "localhost",
     user: "root",
     password: keys.mysqlPassWord,
+    multipleStatements: true
   }
 
 var con: Connection;

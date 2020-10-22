@@ -5,7 +5,7 @@
   "main": "server/dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc -p server/ && echo \"Completed\" && exit 0",
+    "build": "npx tsc -p ./server/ && echo \"Completed building\" && exit 0",
     "server": "npm run build && node .",
     "serverp": "npm run build && node . prod",
     "client": "npm start --prefix client",

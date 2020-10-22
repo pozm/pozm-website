@@ -5,11 +5,12 @@ export type userType = {
     ID:number,
     PowerID : number,
     Email : string,
-    RegisteredAt: Date,
+    RegisteredAT: string,
     Subscriptions: null | {},
     RegisteredIP : string,
     LastIP : string,
-    KEYID: string
+    KEYID: string,
+    AvatarUri : string
 } | null
 
 export default createContext<{user:userType,setUser:React.Dispatch<React.SetStateAction<userType>>}|null>(null)
