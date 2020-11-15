@@ -1,85 +1,82 @@
-import React, { useContext } from "react";
+import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Redirect, useHistory, useLocation } from "react-router-dom";
-import { Alert } from "rsuite";
+import {Redirect, useLocation} from "react-router-dom";
+import {Alert} from "rsuite";
 import AccountForm from "../components/AccountForm";
-import userContext from "../hooks/userContext";
 import Page404 from "./404";
+import useUser from "../hooks/useUser";
 
 let recaptcha = React.createRef<ReCAPTCHA>();
 
-type Props= {
-
-};
+type Props = {};
 
 
-const Signup :React.FC<Props> = (props) => {
+const Signup: React.FC<Props> = (props) => {
 
-  let UserContext = useContext(userContext);
-  let location = useLocation()
-  let search = new URLSearchParams(location.search)
-  let key = search.get('key')
-  let History = useHistory()
+    const {user, mutate} = useUser()
+    let location = useLocation()
+    let search = new URLSearchParams(location.search)
+    let Key = search.get('key')
 
-  async function CreateAccount(e :React.FormEvent<HTMLFormElement> | undefined, state : object | undefined ) {
-    if (!state) {
-        Alert.error("Missing values.");
-      return;
-    }
-    if (!Object.values(state).every((v) => v !== ""))
-    {
-        Alert.error("Missing values.")
-      return;
-    }
-    let data = await fetch("/api/createAccount", {
-      body: JSON.stringify({...state,key}),
-      mode: "same-origin",
-      method: "POST",
-    });
-    if (data.ok) {
-      fetch("/api/getUser")
-        .then((res) => res.json())
-        .then((out) => {
-          if (!out.error && out.data) UserContext?.setUser(out.data);
-          else {
-            Alert.error(out.message)
-          }
+    async function CreateAccount(e: React.SyntheticEvent<Element, Event> | undefined, state: {
+        formValue: {
+            Email: string;
+            UserName: string;
+            Password: string;
+        };
+        Recaptcha: string;
+    } | undefined) {
+        if (!state) {
+            Alert.error("Missing values.");
+            return;
+        }
+        if (!Object.values(state).every((v) => v !== "")) {
+            Alert.error("Missing values.")
+            return;
+        }
+        let data = await fetch("/api/createAccount", {
+            body: JSON.stringify({...state.formValue, Recaptcha: state.Recaptcha, Key}),
+            mode: "same-origin",
+            method: "POST",
         });
-    } else {
-      data.json().then((jsn)=>{
-        let msg = jsn.message
-        console.log(msg,jsn)
-        Alert.error(msg)
-        recaptcha.current?.reset();
-      })
+        if (data.ok) {
+            mutate("/api/getUser")
+        } else {
+            data.json().then((jsn) => {
+                let msg = jsn.message
+                console.log(msg, jsn)
+                Alert.error(msg)
+                recaptcha.current?.reset();
+            })
+        }
     }
-  }
-	return (
-    <div>
-    {key === ''||key===null ? <Page404/> : 
-			<div
-				className="container home my-5"
-				style={{
-					// display: "flex",
-					flexFlow: "wrap",
-					justifyContent: "center",
-					// paddingTop: "30px",
-				}}
-			>
-        {UserContext?.user?.ID && <Redirect from="/Signup" to="/" />}
-        <div >
-          <h2>Using key : {key} </h2>
-          <AccountForm
-            className="mx-auto"
-            // style={{width:'fit-content'}}
-            recaptchaRef={recaptcha}
-            Login={false}
-            SubmitFunc={CreateAccount}
-          />
+
+    return (
+        <div>
+            {Key === '' || Key === null ? <Page404/> :
+                <div
+                    className="container home my-5"
+                    style={{
+                        // display: "flex",
+                        flexFlow: "wrap",
+                        justifyContent: "center",
+                        // paddingTop: "30px",
+                    }}
+                >
+                    {user?.ID && <Redirect from="/Signup" to="/"/>}
+                    <div>
+                        <h2>Using key : {Key} </h2>
+                        <AccountForm
+                            className="mx-auto"
+                            // style={{width:'fit-content'}}
+                            recaptchaRef={recaptcha}
+                            Login={false}
+                            SubmitFunc={CreateAccount}
+                        />
+                    </div>
+                </div>
+            }
         </div>
-			</div>
-    }
-		</div>
-	);
+    );
 }
 export default Signup

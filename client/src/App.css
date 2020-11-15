@@ -14,8 +14,15 @@ html {
   width: 5px;
   background: transparent;
   z-index: 1;
-  transition: all 1s;
+  transition: all 21s;
 }
+::-webkit-scrollbar:hover {
+  width: 7px;
+  background: rgba(255,255,255,0.2);
+  z-index: 1;
+  transition: all 21s;
+}
+
 ::-webkit-scrollbar-track {
   background: transparent;
   z-index: 1;
@@ -26,6 +33,7 @@ html {
   border-radius: 4px;
   z-index: 1;
 }
+
 html, body {
   overflow: overlay;
 }
@@ -81,4 +89,32 @@ hr.light {
 .seper:hover {
   transform: scaleY(1.2);
   transition: transform .3s ease;
+}
+.rs-panel
+{
+  background-color:#1F2329
+}
+
+.rs-panel-group {
+  background-color:#1F2329
+}
+
+:root {
+  --primaryColor: #0F131A;
+  --secondaryColor: #1F2329;
+  --secondary-darkColor: #212429;
+}
+
+
+.rs-list-item .reqh {
+  transition: filter 500ms;
+  filter: blur(12px);
+}
+.rs-list-item .reqh:hover {
+  transition: filter 500ms;
+  filter: blur(0px);
+}
+
+.rs-list-item:hover .reqh {
+  filter: blur(0px);
 }

@@ -1,9 +1,7 @@
 import { json, urlencoded } from "body-parser";
 import {Connection, ConnectionConfig, createConnection} from "mysql";
 import { join } from "path";
-// import ExGraphQL = require('express-graphql');
-// import GraphQL = require('graphql');
-import { promisify } from "util";
+import rateLimit from "express-rate-limit"
 import { APIRouter } from "./api";
 import { keys } from "./keys";
 import express = require("express");
@@ -11,7 +9,15 @@ let app = express();
 import multer = require("multer");
 let upload = multer();
 import session = require("express-session");
+import {getCreatedKeysFromId, GetType, uuidv4} from "./utils";
 let MySQLStore = require("express-mysql-session")(session);
+const limiter = rateLimit({
+    windowMs: 60e3,
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+app.use("/api",limiter);
 
 app.use(json({ limit: "10kb", type: "*/*" }));
 app.use(urlencoded({ extended: false, limit: "10kb", parameterLimit: 100 }));
@@ -33,9 +39,10 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie: {
-      secure: "auto",
-      expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30000),
-      path: "/",
+        secure: "auto",
+        expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30000),
+        path: "/",
+        domain : GetType() ?".pozm.pw" : "localhost"
     },
     name: "session",
   })
@@ -109,10 +116,7 @@ handleDisconnect(1);
 // });
 
 
-let type = false;
-if (process.argv[2] == "prod") {
-  type = true;
-}
+let type = GetType();
 
 console.log("pre : " + type);
 
@@ -132,11 +136,24 @@ console.log("pre : " + type);
 
 // app.use('/graphql',mw)
 app.use("/api", APIRouter);
+app.locals.CurrentContext = type
 if (type) {
-  app.use(express.static(join(__dirname, "../../client/build")));
-  app.get("/*", (req, res) => {
-    res.sendFile(join(__dirname, "../../client/build/index.html"));
-  });
+    app.all(/.*/, function(req, res, next) {
+        // res.header("content-security-policy","style-src 'self' https://*.google.com 'unsafe-inline' https://stackpath.bootstrapcdn.com https://*.googleapis.com; script-src 'self' http://localhost https://*.pozm.pw https://cdnjs.cloudflare.com https://stackpath.bootstrapcdn.com https://code.jquery.com 'sha256-GQrFe/mgM9DWkplwjVc1jXMPlWiyZB8kB6oQVzuloI8=' https://*.cloudflare.com; font-src https://*; ")
+        let host = req.header("host");
+        if (host?.match(/^www\..*/i) || host?.includes("localhost")) {
+            next();
+        } else {
+            console.log(host?.includes("localhost"))
+            if (host?.includes("localhost")) return next();
+            res.redirect(301, "http://www." + host + req.path);
+        }
+    });
+    app.use(express.static(join(__dirname, "../../client/build")));
+    app.get("/*", (req, res) => {
+        res.header("Access-Control-Allow-Origin","*.pozm.pw")
+        res.sendFile(join(__dirname, "../../client/build/index.html"));
+    });
 }
 
 app.listen(type ? 80 : 5000, () =>

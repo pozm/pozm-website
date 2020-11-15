@@ -14,6 +14,10 @@ export declare module AdminData {
         KEYID: string;
         AvatarUri?: any;
         password?: any;
+        DiscordID : string,
+        DiscordUser : string
+        CreatedInvites? : number
+        InvitedBy : string
     }
 
     export interface Key {
@@ -22,6 +26,7 @@ export declare module AdminData {
         CreatedAT: string;
         RegisteredAT?: string;
         PowerID: number;
+        CreatedBy:string;
     }
 
     export interface RootObject {

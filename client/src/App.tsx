@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import {Container, Content, Notification} from 'rsuite';
+import React, {useMemo} from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {Container, Content, Loader, Notification} from 'rsuite';
 
 
 import Navigation from './components/nav';
-import userContext, { userType } from './hooks/userContext';
 import Page401 from './pages/401';
 import Page404 from './pages/404';
 import AccountPage from './pages/account';
@@ -15,104 +14,144 @@ import Grincher from './pages/grincher';
 import Home from './pages/home';
 import Legal from './pages/legal';
 import Login from './pages/login';
-import RtxC from './pages/rtxChecker';
 import Signup from './pages/signup';
 import WebhookT from './pages/webhookTools';
 
+import {DiscordLinkUrl} from "./utils";
+import useUser from "./hooks/useUser";
+import UserPage from "./pages/user";
 
-type Props = {
 
-}
+type Props = {}
 
-const App : React.FC<Props> = ({}) => {
-	const [user, setUser] = useState<userType>(null);
+const App: React.FC<Props> = () => {
+    const {user, loading} = useUser()
+    // console.log(user)
 
-	useEffect(() => {
-		if (user?.ID) return;
-		fetch('/api/getUser')
-			.then((res) => res.json())
-			.then((out) => {
-				if (!out.error && out.data) setUser(out.data);
-				if (user?.ID && parseInt(window.localStorage.getItem("seenDiscord") ?? "0") < 1) {
-					Notification.open({
-						title: 'Discord',
-						description: <div>You have gained access to join the discord, you may join from <a href={"https://discord.gg/V4Yvqc"} target={"_blank"} >https://discord.gg/V4Yvqc</a></div>,
-						duration:0,
-					});
-					window.localStorage.setItem("seenDiscord", "1")
-				}
-			});
-	}, []);
-	return (
-		<div className="App">
-			<Router>
-				<userContext.Provider value={{ user, setUser }}>
-						<div style={{display:"flex"}}>
-							<div style={{zIndex:10}}>
-								<Navigation />
-							</div>
-							<Container className="container-fluid main" >
-								<Content style={{overflow:"hidden"}} >
-									<Switch>
-										<Route path="/" exact component={() => <Home />} />
-										<Route
-											path="/contact"
-											exact
-											component={() => <Contact />}
-										/>
-										<Route
-											path="/legal"
-											exact
-											component={() => <Legal />}
-										/>
-										<Route
-											path="/grincher"
-											exact
-											component={() => <Grincher />}
-										/>
-										<Route
-											path="/signUp"
-											exact
-											component={() => <Signup />}
-										/>
-										<Route
-											path="/Login"
-											exact
-											component={() => <Login />}
-										/>
-										<Route
-											path="/rtx"
-											exact
-											component={() => <RtxC />}
-										/>
-										<Route
-											path="/account"
-											exact
-											component={() => user?.ID ? <AccountPage /> : <Login/> }
-										/>
-										<Route
-											path="/TheCollection/:id?"
-											exact
-											component={() => user?.ID ? <TheCollection /> : <Login/> }
-										/>
-										<Route
-											path="/admin"
-											exact
-											component={() => (user?.PowerID ?? 0) >=5 ? <AdminPage /> : <Page401 msg="You are unauthorized to access this."/> }
-										/>
-										<Route
-											path="/Webhook"
-											exact
-											component={() => <WebhookT /> }
-										/>
-										<Route component={Page404} />
-									</Switch>
-								</Content>
-							</Container>
-						</div>
-				</userContext.Provider>
-			</Router>
-		</div>
-	);
+    useMemo(() => {
+        if (loading) return;
+        setTimeout(() => console.log("%cDo not paste anything in here unless ur retarded", "color:red; font-size: 50px;-webkit-text-stroke-color:black;-webkit-text-stroke-width:2px"), 1e3)
+        let lastSeenDiscord = parseInt(window.localStorage.getItem("seenDiscord") ?? "0")
+        if (user?.ID && lastSeenDiscord < 2 && !user.DiscordID) {
+            Notification.open({
+                title: 'Discord Link',
+                description: <div>You have gained access to join the discord, you may link your account from <a
+                    href={DiscordLinkUrl}>here</a></div>,
+                duration: 0,
+            });
+            window.localStorage.setItem("seenDiscord", "2")
+        }
+        let ds = window.localStorage.getItem("DiscordState")
+        if (ds) {
+            if (ds === "1") {
+                Notification.open({
+                    title: 'Discord Link',
+                    description: <div>Successfully linked your discord.</div>,
+                    duration: 10e3,
+                });
+            } else {
+                switch (ds) {
+                    case "2":
+                        Notification.open({
+                            title: 'Discord Link',
+                            description: <div>You are banned from the discord, therefore you are unable to join.</div>,
+                            duration: 10e3,
+                        });
+                        break;
+                    case "3":
+                        Notification.open({
+                            title: 'Discord Link',
+                            description: <div>Unable to join discord (unknown)</div>,
+                            duration: 10e3,
+                        });
+                        break;
+                    case "4" :
+                        Notification.open({
+                            title: 'Discord Link',
+                            description: <div>Discord account is already linked to another account</div>,
+                            duration: 10e3,
+                        });
+                        break;
+                }
+
+            }
+            window.localStorage.setItem("DiscordState", " -1")
+        }
+    }, [loading, user]);
+    return (
+        <div className="App">
+            <Router>
+                <div style={{display: "flex"}}>
+                    <div style={{zIndex: 10}}>
+                        <Navigation/>
+                    </div>
+                    <Container className="container-fluid main">
+                        <Content style={{overflow: "hidden"}}>
+                            {loading ?
+                                <Loader size={"lg"} center content={"Requesting data..."} vertical/>
+                                :
+                                <Switch>
+                                    <Route path="/" exact component={() => <Home/>}/>
+                                    <Route
+                                        path="/contact"
+                                        exact
+                                        component={() => <Contact/>}
+                                    />
+                                    <Route
+                                        path="/legal"
+                                        exact
+                                        component={() => <Legal/>}
+                                    />
+                                    <Route
+                                        path="/grincher"
+                                        exact
+                                        component={() => <Grincher/>}
+                                    />
+                                    <Route
+                                        path="/signUp"
+                                        exact
+                                        component={() => <Signup/>}
+                                    />
+                                    <Route
+                                        path="/Login"
+                                        exact
+                                        component={() => <Login/>}
+                                    />
+                                    <Route
+                                        path="/account"
+                                        exact
+                                        component={() => user?.ID ? <AccountPage/> : <Login/>}
+                                    />
+                                    <Route
+                                        path="/TheCollection/:id?"
+                                        exact
+                                        component={() => user?.ID ? <TheCollection/> : <Login/>}
+                                    />
+                                    <Route
+                                        path="/user/:id"
+                                        exact
+                                        component={() => <UserPage/>}
+                                    />
+                                    <Route
+                                        path="/admin"
+                                        exact
+                                        component={() => (user?.PowerID ?? 0) >= 5 ? <AdminPage/> :
+                                            <Page401 msg="You are unauthorized to access this."/>}
+                                    />
+                                    <Route
+                                        path="/Webhook"
+                                        exact
+                                        component={() => <WebhookT/>}
+                                    />
+                                    <Route component={Page404}/>
+                                </Switch>
+                            }
+                            <footer><p style={{color:"#0C0F15",zIndex:0,userSelect:"none", position:"absolute"}}> If you can see this, then you have dark reader, or some other ext enabled, i recommend that you disable it. </p></footer>
+                        </Content>
+                    </Container>
+                </div>
+            </Router>
+        </div>
+    );
 }
 export default App

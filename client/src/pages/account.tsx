@@ -1,33 +1,79 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Link} from "react-router-dom"
 import InfoBox from '../components/InfoBox';
-import userContext from '../hooks/userContext';
 import '../styles/InfoBox.css';
 import '../styles/utils.css';
-import {Button, Icon, Modal, Panel} from "rsuite";
+import {Alert, Button, Icon, Input, InputGroup, List, Modal, Panel, PanelGroup} from "rsuite";
+import {DiscordLinkUrl, parsePowerId} from "../utils";
+import useUser from "../hooks/useUser";
+import UserFont from "../components/UserFont";
 
 type Props = {};
 
 
 export const AccountPage: React.FC<Props> = () => {
-    let uv = useContext(userContext);
-    let [ModalState,ModalStateUpdate] = useState(false)
-    let onDelete = useCallback(()=>{
-        fetch("/api/account",{method:"DELETE"})
-    },[])
-    let Close = useCallback(()=>{
+    const {user} = useUser()
+    let [ModalState, ModalStateUpdate] = useState(false)
+    let [Invites, setInvites] = useState<{KEYID:string, Registered:number}[]>([])
+
+    useEffect(()=>{
+        fetch("/api/Keys/CreatedInvites", {method: "GET"}).then(v => {
+            return v.json()
+        }).then(jsn=>{
+            console.log(jsn)
+            if (jsn.error) {
+                return setInvites([])
+            }
+            return setInvites(jsn.Keys)
+        })
+    },[setInvites])
+    let onDelete = useCallback(() => {
+        fetch("/api/account", {method: "DELETE"}).then(v => {
+            if (v.ok) {
+                window.location.reload()
+            }
+        })
+    }, [])
+    let CreateInvite = useCallback(()=>{
+        fetch("/api/Keys/CreateInvite", {method: "POST"}).then(v => {
+            return v.json()
+        }).then(jsn=>{
+            console.log(jsn)
+            if (jsn.error) {
+                return Alert.error( <div> {jsn.message} </div> )
+            }
+            user!.CreatedInvites!++
+            return setInvites([...Invites,{KEYID:jsn.Key,Registered:0}])
+        })
+    },[setInvites,Invites])
+
+    let Close = useCallback(() => {
         ModalStateUpdate(false)
-    },[ModalStateUpdate])
-    let Open = useCallback(()=>{
+    }, [ModalStateUpdate])
+    let Open = useCallback(() => {
         ModalStateUpdate(true)
-    },[ModalStateUpdate])
+    }, [ModalStateUpdate])
     return (
         <div className="home">
-            <div
-                className="jumbotron my-3"
-                // style={{ backgroundColor: '#ffffff11' }}
-            >
-                <h1> Account page </h1>
-                <h1 className={"lead"}></h1>
+            <div style={{width: "100%", marginBottom: 50, height: 200, background: "#ffffff11", display: "flex"}}
+                 className={" p-4 px-5"}>
+                <div className="AvatarText" style={{fontSize: "xxx-large", alignSelf: "center"}}>
+                    {user?.Username ?? ""}
+                    <p style={{fontSize: "medium"}}> {user?.DiscordUser && user?.DiscordUser + ' • '} <UserFont user={user}> {parsePowerId(user?.PowerID ?? 0)} </UserFont> • <Link
+                        to={"/user/" + user?.ID}>Goto profile</Link></p>
+                </div>
+                <div
+                    className="avatarParent"
+                    style={{marginLeft: "auto"}}
+                >
+                    <div className="CircleMask" style={{marginRight: "10px"}}>
+                        <img
+                            src={user?.AvatarUri}
+                            width={128}
+                            alt=""
+                        />
+                    </div>
+                </div>
             </div>
 
             <Modal backdrop="static" show={ModalState} onHide={Close} size="xs">
@@ -44,7 +90,9 @@ export const AccountPage: React.FC<Props> = () => {
                     Once deleted you are unable to recover it.
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={()=>{onDelete(); window.location.reload()}} appearance="primary">
+                    <Button onClick={() => {
+                        onDelete()
+                    }} appearance="primary">
                         Ok
                     </Button>
                     <Button onClick={Close} appearance="subtle">
@@ -52,40 +100,55 @@ export const AccountPage: React.FC<Props> = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <PanelGroup accordion>
+                <Panel header={"Content you have access to"} eventKey={1} collapsible bordered>
+                    <div
+                        className="row align-items-center my-5"
+                        style={{display: 'flex', justifyContent: 'center'}}
+                    >
+                        <InfoBox linkTo="webhook" title="Webhook" Desc="Manage discord webhooks easily"/>
+                        <InfoBox linkTo="TheCollection" title="The collection" Desc="oh yes."/>
+                        {(user?.PowerID ?? 0) >= 5 && <InfoBox linkTo="admin" title="Admin" Desc="The admin panel"/>}
+                    </div>
+                </Panel>
+                <Panel className={"my-3"} header={"User info"} eventKey={2} collapsible bordered>
+                    <p className={"font-weight-light"}> Username: {user?.Username} </p>
+                    <p className={"font-weight-light"}> Account ID: {user?.ID} </p>
+                    <p className={"font-weight-light"}> Power ID: {user?.PowerID} </p>
+                    <p className={"font-weight-light"}> Account Email: {user?.Email} </p>
+                    <p className={"font-weight-light"}> Created
+                        at: {new Date(user?.RegisteredAT ?? "").toLocaleString("en-gb", {hour12: true})} </p>
+                    <p className={"font-weight-light"}> Used key: {user?.KEYID} </p>
+                    <p className={"font-weight-light"}> Linked discord: {user?.DiscordUser} ({user?.DiscordID}) </p>
+                    <p className={"font-weight-light"}> Avatar: {user?.AvatarUri ?? "None"} </p>
+                </Panel>
+                <Panel className={"my-3"} header={"Invites"} eventKey={3} collapsible bordered>
+                    <Button color={"orange"} onClick={CreateInvite} disabled={((user?.CreatedInvites ?? 99) >= 2) && user?.ID !== 2 } >
+                        Create invite
+                    </Button>
+                    <List bordered hover className={"my-2"} >
 
-            <Panel header={"Content you have access to"} collapsible bordered shaded>
-                <div
-                    className="row align-items-center my-5"
-                    style={{display: 'flex', justifyContent: 'center'}}
-                >
-                    <InfoBox linkTo="webhook" title="Webhook" Desc="Manage discord webhooks easily"/>
-                    <InfoBox linkTo="TheCollection" title="The collection" Desc="oh yes."/>
-                    {(uv?.user?.PowerID ?? 0) >= 5 && <InfoBox linkTo="admin" title="Admin" Desc="The admin panel"/>}
-                </div>
-            </Panel>
-            <Panel className={"my-3"} header={"User info"} collapsible bordered shaded>
-                <p className={"font-weight-light"}> Username: {uv?.user?.Username} </p>
-                <p className={"font-weight-light"}> Account ID: {uv?.user?.ID} </p>
-                <p className={"font-weight-light"}> Power ID: {uv?.user?.PowerID} </p>
-                <p className={"font-weight-light"}> Account Email: {uv?.user?.Email} </p>
-                <p className={"font-weight-light"}> Created
-                    at: {new Date(uv?.user?.RegisteredAT ?? "").toLocaleString("en-gb", {hour12: true})} </p>
-                <p className={"font-weight-light"}> Used key: {uv?.user?.KEYID} </p>
-                <p className={"font-weight-light"}> Avatar: {uv?.user?.AvatarUri ?? "None"} </p>
-            </Panel>
+                        {Invites?.map((v,idx)=>{
+                            return <List.Item key={idx+v.KEYID}  >{!v.Registered && '✨ | '}<span className={"reqh"} >{v.KEYID}</span></List.Item>
+                        })}
+
+
+                    </List>
+                </Panel>
+            </PanelGroup>
             <div
                 className="row align-items-center my-2"
                 style={{display: 'flex', justifyContent: 'center'}}
             >
-                <Button color={"blue"} href={"https://discord.gg/V4Yvqc"} >
-                    Join discord
+                <Button color={"blue"} href={DiscordLinkUrl}>
+                    Link discord {user?.DiscordUser && `(Currently linked to ${user?.DiscordUser ?? "????"})`}
                 </Button>
             </div>
             <div
                 className="row align-items-center"
                 style={{display: 'flex', justifyContent: 'center'}}
             >
-                <Button color={"red"} onClick={Open} >
+                <Button color={"red"} onClick={Open}>
                     Delete account
                 </Button>
             </div>

@@ -1,9 +1,24 @@
-/* .coolimg {
+.coolimg {
     transition: transform .3s;
-
+    cursor: pointer;
 }
+
+/*
 .coolimg:hover::after {
     z-index: 100;
     transition: transform .3s;
     transform:  scale(1.1);
 } */
+
+
+.BigCoolImg{
+    max-height:90vh;
+    position:fixed;
+    margin:auto auto;
+    z-index:50;
+    left:0;
+    right:0;
+    bottom:0;
+    top:0;
+    max-width: 90vw;
+}

@@ -1,11 +1,11 @@
 import {faBars} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import React, {CSSProperties, useCallback, useContext, useState} from 'react';
+import React, {CSSProperties, useCallback, useState} from 'react';
 import {useMediaQuery} from 'react-responsive';
 import {useHistory, useLocation, withRouter} from 'react-router-dom';
 import {Button, Container, Dropdown, Icon, Nav, Navbar, Sidebar, Sidenav} from 'rsuite';
-import userContext from '../hooks/userContext';
 import '../styles/nav.css';
+import useUser from "../hooks/useUser";
 
 type Props = {};
 
@@ -39,7 +39,7 @@ function parsePathToKey(p: string) {
 }
 
 const NavToggle = ({expand, onChange, onSelect}: { expand: boolean, onChange: () => void, onSelect: (key: any) => void }) => {
-    let uv = useContext(userContext);
+    const {user} = useUser()
     return (
         <Navbar appearance="subtle" className="nav-toggle" style={{borderTop: "1px solid #3c3f43"}}>
             <Navbar.Body>
@@ -48,14 +48,14 @@ const NavToggle = ({expand, onChange, onSelect}: { expand: boolean, onChange: ()
                         placement="topStart"
                         trigger="click"
                         renderTitle={children => {
-                            return <Icon style={iconStyles} icon="cog"/>;
+                            return <Icon style={iconStyles} icon="user"/>;
                         }}
                     >
-                        {uv?.user?.ID ? (<Dropdown.Item disabled> Signed in as {uv.user.Username} </Dropdown.Item>) : (
+                        {user?.ID ? (<Dropdown.Item disabled> Signed in as {user.Username} </Dropdown.Item>) : (
                             <Dropdown.Item eventKey="4-1"> Sign In </Dropdown.Item>)}
-                        {uv?.user?.ID && <Dropdown.Item divider/>}
-                        {uv?.user?.ID && <Dropdown.Item eventKey={"4-44"}>Settings</Dropdown.Item>}
-                        {uv?.user?.ID && <Dropdown.Item eventKey={"4-3"}>Sign out</Dropdown.Item>}
+                        {user?.ID && <Dropdown.Item divider/>}
+                        {user?.ID && <Dropdown.Item eventKey={"4-44"}>Settings</Dropdown.Item>}
+                        {user?.ID && <Dropdown.Item eventKey={"4-3"}>Sign out</Dropdown.Item>}
                     </Dropdown>
                 </Nav>
                 <Nav pullRight>
@@ -69,10 +69,10 @@ const NavToggle = ({expand, onChange, onSelect}: { expand: boolean, onChange: ()
 };
 
 
-export const NavComp: React.FC<Props> = ({}) => {
+export const NavComp: React.FC<Props> = () => {
+    const {user, mutate} = useUser()
     let location = useLocation()
     let history = useHistory()
-    let uv = useContext(userContext);
 
     let [navState, setNavState] = useState({expanded: false, activeKey: "1"})
 
@@ -82,9 +82,9 @@ export const NavComp: React.FC<Props> = ({}) => {
 
     let signout = useCallback(() => {
         fetch('/api/killSession', {method: 'DELETE'}).then((res) => {
-            if (res.ok) return uv!.setUser(null);
+            mutate('api/getUser')
         });
-    }, [uv?.setUser])
+    }, [mutate])
     const onSel = useCallback((key) => {
         switch (key) {
             case "1":
@@ -139,7 +139,7 @@ export const NavComp: React.FC<Props> = ({}) => {
                 history.push('/');
                 break;
         }
-    }, [])
+    }, [history,signout])
     const Nav_body = (
         <Sidenav.Body>
             <Nav>
@@ -157,8 +157,8 @@ export const NavComp: React.FC<Props> = ({}) => {
                     <Dropdown.Item eventKey="3-5"> Webhook tools </Dropdown.Item>
                     {/* <Dropdown.Item disabled eventKey="3-6"> Lua deobfuscator </Dropdown.Item> */}
                 </Dropdown>
-                {/*{uv?.user?.ID && <Dropdown eventKey="4" title="Account" icon={<Icon icon="user"/>}>*/}
-                {/*    {uv?.user?.ID && (<Dropdown.Item eventKey="4-2">View Content</Dropdown.Item>)}*/}
+                {/*{user?.ID && <Dropdown eventKey="4" title="Account" icon={<Icon icon="user"/>}>*/}
+                {/*    {user?.ID && (<Dropdown.Item eventKey="4-2">View Content</Dropdown.Item>)}*/}
                 {/*</Dropdown>}*/}
 
                 <Dropdown eventKey="5" title="Other" icon={<Icon icon="question"/>}>
@@ -218,23 +218,23 @@ export const NavComp: React.FC<Props> = ({}) => {
                                 <div style={headerStyles}></div>
                             </Sidenav.Header>
                             {Nav_body}
-                        <Sidenav.Body   >
-                            <Nav>
-                                <Dropdown
-                                    placement="topStart"
-                                    trigger="click"
-                                    icon={<Icon icon="cog"/>}
-                                    title={"Settings"}
-                                >
-                                    {uv?.user?.ID ? (
-                                        <Dropdown.Item disabled> Signed in as {uv.user.Username} </Dropdown.Item>) : (
-                                        <Dropdown.Item eventKey="4-1"> Sign In </Dropdown.Item>)}
-                                    {uv?.user?.ID && <Dropdown.Item divider/>}
-                                    {uv?.user?.ID && <Dropdown.Item eventKey={"4-44"}>Settings</Dropdown.Item>}
-                                    {uv?.user?.ID && <Dropdown.Item eventKey={"4-3"}>Sign out</Dropdown.Item>}
-                                </Dropdown>
-                            </Nav>
-                        </Sidenav.Body>
+                            <Sidenav.Body>
+                                <Nav>
+                                    <Dropdown
+                                        placement="topStart"
+                                        trigger="click"
+                                        icon={<Icon icon="user"/>}
+                                        title={"Account"}
+                                    >
+                                        {user?.ID ? (
+                                            <Dropdown.Item disabled> Signed in as {user.Username} </Dropdown.Item>) : (
+                                            <Dropdown.Item eventKey="4-1"> Sign In </Dropdown.Item>)}
+                                        {user?.ID && <Dropdown.Item divider/>}
+                                        {user?.ID && <Dropdown.Item eventKey={"4-44"}>Settings</Dropdown.Item>}
+                                        {user?.ID && <Dropdown.Item eventKey={"4-3"}>Sign out</Dropdown.Item>}
+                                    </Dropdown>
+                                </Nav>
+                            </Sidenav.Body>
                         </Sidenav>
                     </div>
                 }

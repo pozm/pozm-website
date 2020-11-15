@@ -1,0 +1,33 @@
+span#ADMIN {
+    background-clip:border-box;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    color:#FF512F;
+    font-weight:700;
+    text-shadow:0 0 5px rgba(146, 146, 146, .7);
+    text-decoration: none;
+    background-image:linear-gradient(90deg, #ff0000 0%, #e600ff 100%,#fff);
+    animation:adminanim 5s infinite ease;
+}
+
+@keyframes adminanim{
+    from{
+        filter:hue-rotate(-360deg)
+    }
+    to{
+        filter:hue-rotate(360deg)
+    }
+}
+
+
+span#cool {
+    background-clip: border-box;
+    -webkit-background-clip: text;
+    color: #d4d4d4;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    text-decoration: none;
+}
+span#user {
+    color: grey;
+}

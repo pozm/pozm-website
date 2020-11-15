@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 
 function Page404(props) {
-  let location = props.location ?? useLocation()
+  let location = useLocation()
 
   return (
     <div className="home">

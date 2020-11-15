@@ -8,13 +8,14 @@ type Props= {
   text? : string
   tag?: string
   reff? : string
-  userName :string
+  userName :string | JSX.Element
   className? : string
   style? : React.CSSProperties
+  fontSize? : number
 
 };
 
-export const DiscordUser: React.FC<Props> = ({size,text,avatar,reff,tag,userName,className,style}) => {
+export const DiscordUser: React.FC<Props> = ({size,text,avatar,reff,tag,userName,className,style,fontSize}) => {
   return (
     <div style={style} className={`DiscordUser ${className ??""}`}>
       <div
@@ -35,7 +36,7 @@ export const DiscordUser: React.FC<Props> = ({size,text,avatar,reff,tag,userName
             {userName}
           </a>
           {tag &&
-            <span style={{ fontSize: "xx-small" }}>
+            <span style={{ fontSize: fontSize ?? "xx-small" }}>
               #{tag}
             </span>
           }

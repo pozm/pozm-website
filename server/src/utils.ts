@@ -20,7 +20,7 @@ async function getDataFromId (id:string) {
     if (!id) return null;
     return new Promise(res => {
         
-        con.query('select *, NULL AS password from `whitelist`.`account` where ID = ?',id, (err, res2) => {
+        con.query('select *, NULL AS Password from `whitelist`.`account` where ID = ?',id, (err, res2) => {
             
             if (err) throw err
             if (0 in res2) {
@@ -32,6 +32,10 @@ async function getDataFromId (id:string) {
             
     })
         
+}
+
+export async function getCreatedKeysFromId(id:string) {
+    return (await AsyncQuery<{[x:string]:number}[]>(`select count(*) from whitelist.keycode where CreatedBy = ?`,[id]) ?? [{}])[0]['count(*)'] ?? 0
 }
 
 export function uuidv4() {
@@ -61,6 +65,26 @@ export async function CheckIfKeyExists(KeyId : string) {
     if (!exists) return false;
     return Object.values(exists[0])[0]
 }
+export function GetType() {
+    return process.argv[2] == "prod"
+}
 
+export interface UserType {
+    ID: number;
+    Username: string;
+    Password: string;
+    PowerID: number;
+    Email: string;
+    RegisteredAT: string;
+    Subscriptions?: any;
+    RegisteredIP: string;
+    LastIP: string;
+    KEYID: string;
+    AvatarUri?: any;
+    password?: any;
+    DiscordID : string,
+    DiscordUser : string,
+    InvitedBy : string
+}
 
 export {getIdFromUser,AsyncQuery,getDataFromId}

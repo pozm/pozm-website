@@ -16,12 +16,13 @@
     "react-google-recaptcha": "^2.1.0",
     "react-responsive": "^8.1.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3",
-    "rsuite": "^4.8.2"
+    "react-scripts": "^4.0.0",
+    "rsuite": "^4.8.2",
+    "swr": "^0.3.6"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-csp dev && react-scripts start",
+    "build": "react-csp prod && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -44,13 +45,14 @@
   "homepage": ".",
   "start_url": ".",
   "devDependencies": {
-    "typescript": "^4.0.2",
     "@types/jquery": "^3.5.1",
     "@types/node": "^14.6.4",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-google-recaptcha": "^2.1.0",
     "@types/react-responsive": "^8.0.2",
-    "@types/react-router-dom": "^5.1.5"
+    "@types/react-router-dom": "^5.1.5",
+    "react-csp": "^1.1.0",
+    "typescript": "^4.0.2"
   }
 }

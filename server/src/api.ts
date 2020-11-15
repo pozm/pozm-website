@@ -3,34 +3,25 @@ import * as crypto from "crypto"
 import { con, dataStructures } from '.';
 import { keys } from './keys';
 import got from 'got/dist/source';
-import {AsyncQuery, CheckIfKeyExists, getDataFromId, getIdFromUser, uuidv4} from './utils';
+import {
+    AsyncQuery,
+    CheckIfKeyExists,
+    getCreatedKeysFromId,
+    getDataFromId,
+    getIdFromUser,
+    GetType,
+    UserType,
+    uuidv4
+} from './utils';
 import { readFile } from 'fs/promises';
 import {OkPacket} from "mysql";
 import {NextFunction} from "express";
+import DiscordOAuth = require("discord-oauth2")
+const OAuth = new DiscordOAuth();
 const APIRouter = express.Router()
 
 //#region pretty cool...
 let theFile : {[x:string] : string[]}
-
-async function RequireAdmin(req: express.Request,res:express.Response, next : NextFunction) {
-    let cookie = (req.session as Express.Session)
-    if (!cookie?.logedInto) return res.json({error:44,message:'Not signed in'})
-    let user = await getDataFromId(cookie.logedInto) as {[x:string]:any}
-    if (user?.PowerID < 5) return res.json({error:45,message:'insufficient power'})
-    next()
-}
-async function RequireLoggedIn(req: express.Request,res:express.Response, next : NextFunction) {
-    let cookie = (req.session as Express.Session)
-    if (!cookie?.logedInto) return res.json({error:44,message:'Not signed in'})
-    next()
-}
-async function RequireValidKey(req: express.Request,res:express.Response, next : NextFunction) {
-    let {Key} = req.body
-    if (!Key) return res.json({error: 83, message: "Invalid key provided."})
-    if(!await CheckIfKeyExists(Key)) return res.json({error: 83, message: "Invalid key provided."})
-    else next();
-
-}
 
 function updateTheFile() {
     readFile("./server/hData.json").then(txt => {
@@ -49,15 +40,148 @@ APIRouter.get('/test', (req,res) => {
 });
 //#endregion
 
-APIRouter.get('/getUser', async (req,res) => {
-    let cookie = (req.session as Express.Session)?.logedInto
-    if (!cookie) return res.json({error:44,message:'Not signed in'})
+
+//region Middle ware
+async function RequireAdmin(req: express.Request,res:express.Response, next : NextFunction) {
+    let cookie = (req.session as Express.Session)
+    if (!cookie?.logedInto) return res.json({error:44,message:'Not signed in'})
+    let user = await getDataFromId(cookie.logedInto) as {[x:string]:any}
+    if (user?.PowerID < 5) return res.json({error:45,message:'insufficient power'})
+    next()
+}
+async function RequireCool(req: express.Request,res:express.Response, next : NextFunction) {
+    let cookie = (req.session as Express.Session)
+    if (!cookie?.logedInto) return res.json({error:44,message:'Not signed in'})
+    let user = await getDataFromId(cookie.logedInto) as {[x:string]:any}
+    if (user?.PowerID < 1) return res.json({error:45,message:'insufficient power'})
+    res.locals.userID = cookie?.logedInto
+    next()
+}
+async function RequireLoggedIn(req: express.Request,res:express.Response, next : NextFunction) {
+    let cookie = (req.session as Express.Session)
+    if (!cookie?.logedInto) return res.json({error:44,message:'Not signed in'})
+    res.locals.userID = cookie?.logedInto
+    next()
+}
+async function RequireValidKey(req: express.Request,res:express.Response, next : NextFunction) {
+    let {Key} = req.body
+    if (!Key) return res.json({error: 83, message: "Invalid key provided."})
+    if(!await CheckIfKeyExists(Key)) return res.json({error: 83, message: "Invalid key provided."})
+    else next();
+}
+async function RequireValidUser(req: express.Request,res:express.Response, next : NextFunction) {
+    let {User} = req.params
+    if (!User) return res.json({error:76,message:"Invalid user"})
     else {
-        return res.json({error:false,data:await getDataFromId(cookie)})
+        let data = await getDataFromId(User)
+        if (!data) return res.json({error:76,message:"Invalid user"})
+        res.locals.User = data
+        next();
     }
+}
+
+//endregion
+
+let blData = {
+    Users : ["608778876939665449"],
+    Guilds : []
+}
+APIRouter.get("/Blacklist_bot",(req,res)=>{
+    console.log(req.ip)
+    if (["127.0.0.1","::1"].includes(req.ip)) {
+        res.json(blData)
+    }
+})
+
+APIRouter.get("/linkDiscord", RequireLoggedIn , async (req,res) => {
+    let code = req.query["code"]
+    if (!code)
+        return res.json({
+            error:56,
+            message:"missing code."
+        })
+    if (typeof code !== "string")
+        return res.json({
+            error:57,
+            message:"invalid code."
+        })
+    let cookie = (req.session as Express.Session)
+    let Data = {
+        clientId: keys.ClientId,
+        clientSecret : keys.ClientSecret,
+        code,
+        redirectUri: keys.RedirectURI,
+        scope: ["guilds.join","identify"]
+
+    }
+
+    OAuth.tokenRequest({...Data, grantType: "authorization_code"}).then(async token => {
+        let user = await OAuth.getUser(token.access_token)
+        let Exists = await AsyncQuery<{[any:string]:number}[]>('select exists(select DiscordID from `whitelist`.account where DiscordID = ? and ID != ?)', [user.id, cookie?.logedInto])
+        if (Exists === null)
+            return res.send(`<script> window.localStorage.setItem("DiscordState","4"); window.location.replace("/") </script>`)
+        if (Object.values(Exists[0])[0])
+            return res.send(`<script> window.localStorage.setItem("DiscordState","4"); window.location.replace("/") </script>`)
+        AsyncQuery('update `whitelist`.`account` set DiscordID = ?, DiscordUser = ?, AvatarUri=? where ID = ?',[user.id, `${user.username}#${user.discriminator}`, `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` ,cookie?.logedInto])
+        let dbUser = await getDataFromId(cookie?.logedInto) as UserType
+        let roles = ["768251889845796936"]
+        switch (dbUser.PowerID) {
+            case 5:
+                roles.push("768892121842712576")
+                break;
+            case 1:
+                roles.push("768252299461394443")
+                break;
+        }
+
+
+        OAuth.addMember({
+            accessToken: token.access_token,
+            guildId : "767828264281440277",
+            roles,
+            userId: user.id,
+            botToken : keys.BotToken
+        }).then(member=>{
+            res.send(`<script> window.localStorage.setItem("DiscordState","1"); window.location.replace("/") </script>`)
+        }, (reason : Error) => {
+            // console.log(reason, require("util").inspect(reason), typeof reason)
+            res.send(`<script> window.localStorage.setItem("DiscordState",${reason.message.indexOf("banned") >= 1 ? "2" : "3"}); window.location.replace("/") </script>`)
+        })
+        // res.json({
+        //     message:"Successfully linked"
+        // })
+
+    },r => res.json({error:57,message:"invalid code / discord messed up"}))
+
+
+
+    //await AsyncQuery('update `whitelist`.`account` set DiscordID = ? where ID = ?',[id,2])
+})
+APIRouter.get("/users", async (req,res) => {
+    let users = await AsyncQuery('select ID,AvatarUri,Username,PowerID from whitelist.account')
+    return res.json({error:false,data: users})
+})
+APIRouter.get("/user/:User", RequireValidUser, (req,res) => {
+    let {Username,AvatarUri,RegisteredAT,PowerID, InvitedBy } = res.locals.User as UserType
+    return res.json({error:false,data: {Username,AvatarUri,RegisteredAT,PowerID,InvitedBy}})
+})
+APIRouter.put("/user/:User", RequireValidUser , RequireAdmin, async (req,res) => {
+    let {power} = req.body
+    if (res.locals.User.ID === 2) return;
+    let out = await AsyncQuery('update `whitelist`.`account` set PowerID = ? where ID = ?', [power,res.locals.User.ID]).catch(r=>false)
+    if (!out) res.json({error:45,message:"something went wrong?"})
+    return res.json({error:false,message:"updated!"})
+})
+
+
+APIRouter.get('/getUser', RequireLoggedIn, async (req,res) => {
+    let cookie = (req.session as Express.Session)?.logedInto
+    return res.json({error:false,data: {...(await getDataFromId(cookie) as UserType ), CreatedInvites: await getCreatedKeysFromId(cookie) } })
 });
+
 APIRouter.post("/theCol", RequireLoggedIn, async (req,res) => {
     let {id,type} = req.body
+    if (!theFile[type]) type = "Normal"
     return res.json({Files:theFile[type ?? "Normal"].slice(id*20,id*20+20), Fit:Math.ceil(theFile[type ?? "Normal"].length/20), types:Object.keys(theFile)})
 })
 APIRouter.get("/adminData", RequireAdmin, async(req,res)=>{
@@ -65,29 +189,43 @@ APIRouter.get("/adminData", RequireAdmin, async(req,res)=>{
     let Keys = await AsyncQuery<{[x:string]:any}[]>("select * from `whitelist`.`keycode`", )
     return res.json({users,Keys})
 })
+
+//#region keys
 APIRouter.get("/Keys", RequireAdmin, async (req,res)=>{
     let Keys = await AsyncQuery<{[x:string]:any}[]>("select * from `whitelist`.`keycode`", )
     return res.json({Keys})
 })
-APIRouter.post("/CreateKey", RequireAdmin, async (req,res)=>{
+APIRouter.post("/Keys/CreateInvite", RequireCool, async (req,res)=>{
+    let uuid = uuidv4()
+    if ((await getCreatedKeysFromId(res.locals.userID) >= 2) && res.locals.userID !== 2 ) return res.json({error : 61, message:"you've already created maximum keys"})
+    let user = await getDataFromId(res.locals.userID) as UserType
+    await AsyncQuery('insert into `whitelist`.`keycode` (KEYID,PowerID,CreatedBy) values (?,?,?)',[uuid,0,user.ID])
+    return res.json({Key:uuid,message:"Successfully created key."})
+})
+APIRouter.get("/Keys/CreatedInvites", RequireCool, async (req,res)=>{
+    let Keys = await AsyncQuery<{[x:string]:string}[]>('select KEYID, Registered from whitelist.keycode where CreatedBy = ?',[res.locals.userID])
+    return res.json({Keys, error : false})
+})
+APIRouter.post("/Keys/CreateKey", RequireAdmin, async (req,res)=>{
     let uuid = uuidv4()
     let {Power=0} = req.body
 
     await AsyncQuery('insert into `whitelist`.`keycode` (KEYID,PowerID) values (?,?)',[uuid,Power ?? 0])
     return res.json({Key:uuid,Power,message:"Successfully created key."})
 })
-APIRouter.post("/ModifyKey", RequireValidKey, RequireAdmin, async (req,res)=>{
-    let {Power=0,Key} = req.body
+APIRouter.put("/Keys/ModifyKey", RequireValidKey, RequireAdmin, async (req,res)=>{
+    let {Power,Key} = req.body
 
     await AsyncQuery('update `whitelist`.`keycode` set PowerID = ? where KEYID = ?',[Power ?? 0,Key])
     return res.json({Key,Power,message:"Successfully updated key."})
 })
-APIRouter.delete("/DeleteKey", RequireValidKey, RequireAdmin, async (req,res)=>{
+APIRouter.delete("/Keys/DeleteKey", RequireValidKey, RequireAdmin, async (req,res)=>{
     let {Key} = req.body
 
     await AsyncQuery('delete from `whitelist`.`keycode` where KEYID = ?',[Key])
     return res.json({message:"Successfully deleted key."})
 })
+//#endregion
 
 APIRouter.delete("/account", async (req,res)=>{
     let cookie = (req.session as Express.Session)
@@ -107,7 +245,7 @@ APIRouter.delete("/account", async (req,res)=>{
     }
 })
 
-APIRouter.post('/CreateAccount', async (req,res) => {
+APIRouter.post('/CreateAccount',RequireValidKey, async (req,res) => {
     let ip = req.ip
     if (!req.body['Recaptcha']) return res.json({error:21,message:'Please complete the recaptcha'})
 
@@ -117,15 +255,14 @@ APIRouter.post('/CreateAccount', async (req,res) => {
 
     if (!resb.success) return res.status(400).json({error:21,message:'You have failed the recaptcha, try again?'})
 
-    let {UserName,Password,Email,key} = req.body
-    if (! UserName||!Password||!Email||!key) return res.status(400).send(JSON.stringify({error:19,message:'Missing credentials'}))
+    let {UserName,Password,Email,Key} = req.body
+    if (! UserName||!Password||!Email||!Key) return res.status(400).send(JSON.stringify({error:19,message:'Missing credentials'}))
 
     if (!Email.match(/.{0,64}[@](\w{0,255}[.])\w{0,10}/)) return res.status(400).send(JSON.stringify({'error':3,message:'bad email'}))
     if (UserName.match(/(.{30,}|[^A-Za-z\d])/)) return res.status(400).send(JSON.stringify({'error':4,message:'bad username'}))
     if (!Password.match(/^[\x00-\x7F]{8,132}$/i)) return res.status(400).send(JSON.stringify({'error':7,message:'password is invalid (bad)'}))
-    let keydata = await AsyncQuery<{KEYID:string,PowerID:number}[]>('select `KEYID`,`PowerID` from `whitelist`.`keycode` where `KEYID` = ? and Registered=0', key)
-    console.log(keydata,key)
-    if (!keydata || keydata == []) {
+    let keydata = await AsyncQuery<{KEYID:string,PowerID:number,CreatedBy:string}[]>('select `KEYID`,`PowerID`,CreatedBy from `whitelist`.`keycode` where `KEYID` = ? and Registered=0', [Key])
+    if (!keydata || keydata === [] || keydata.length === 0 ) {
         return res.status(400).json({error:9,message:'invalid key'})
     }
     else {
@@ -137,9 +274,9 @@ APIRouter.post('/CreateAccount', async (req,res) => {
             return res.status(400).send(JSON.stringify({'error' : 10, message: `Email / Username is already in use.`}))
         let hash = crypto.createHash('sha512').update(Password);
         let hashedIp = crypto.createHash('sha512').update(req.ip).digest('hex');
-        await AsyncQuery(`insert into \`whitelist\`.\`account\` (Username,Password,Email,RegisteredIP,LastIP, KEYID,PowerID) values (?, ?, ?, ?,?,?,?); 
+        await AsyncQuery(`insert into \`whitelist\`.\`account\` (Username,Password,Email,RegisteredIP,LastIP, KEYID,PowerID,InvitedBy) values (?, ?, ?, ?,?,?,?,?); 
             update \`whitelist\`.\`keycode\` set Registered=1,RegisteredAT=current_timestamp where KEYID=?;`,
-            [UserName,hash.digest('hex'),Email, hashedIp,hashedIp,key,keydata[0]?.PowerID ?? 0,key]);
+            [UserName,hash.digest('hex'),Email, hashedIp,hashedIp,Key,keydata[0]?.PowerID ?? 0,keydata[0]?.CreatedBy,Key]);
         // con.query('update `whitelist`.`keycode` set Registered=1,CreatedAT=current_timestamp where KEYID=?', key);
         (req.session as Express.Session).logedInto = await getIdFromUser(UserName)
         console.log((req.session as Express.Session).logedInto)
@@ -180,7 +317,7 @@ APIRouter.post('/LogintoAccount', async (req,res) => {
     })
 })
 
-APIRouter.delete('/killSession', (req,res)=>{
+APIRouter.delete('/killSession', RequireLoggedIn, (req,res)=>{
     let cookie = (req.session as Express.Session)
     if (!cookie?.logedInto) return res.json({error:44,message:'Not signed in'})
     else {
@@ -188,6 +325,11 @@ APIRouter.delete('/killSession', (req,res)=>{
         res.status(200)
             .send('{}')
     }
+})
+
+
+APIRouter.all("/*",(req,res)=>{
+    res.json({error:82,message:"invalid endpoint"})
 })
 
 
