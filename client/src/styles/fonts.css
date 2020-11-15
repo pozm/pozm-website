@@ -25,9 +25,20 @@ span#cool {
     -webkit-background-clip: text;
     color: #d4d4d4;
     font-weight: 700;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    text-shadow: 0 0 8px rgb(255, 255, 255);
     text-decoration: none;
+    animation:coolanim 5s infinite alternate ease;
 }
+
+@keyframes coolanim{
+    from{
+        filter: brightness(60%);
+    }
+    to{
+        filter:brightness(100%);
+    }
+}
+
 span#user {
     color: grey;
 }

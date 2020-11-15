@@ -3,7 +3,7 @@ import {Link} from "react-router-dom"
 import InfoBox from '../components/InfoBox';
 import '../styles/InfoBox.css';
 import '../styles/utils.css';
-import {Alert, Button, Icon, Input, InputGroup, List, Modal, Panel, PanelGroup} from "rsuite";
+import {Alert, Button, Icon, List, Modal, Panel, PanelGroup} from "rsuite";
 import {DiscordLinkUrl, parsePowerId} from "../utils";
 import useUser from "../hooks/useUser";
 import UserFont from "../components/UserFont";
@@ -45,7 +45,7 @@ export const AccountPage: React.FC<Props> = () => {
             user!.CreatedInvites!++
             return setInvites([...Invites,{KEYID:jsn.Key,Registered:0}])
         })
-    },[setInvites,Invites])
+    },[setInvites,Invites,user])
 
     let Close = useCallback(() => {
         ModalStateUpdate(false)

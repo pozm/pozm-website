@@ -1,11 +1,11 @@
 import React from "react";
 // import data from "../JSON-Data/h.json"
 import {parsePowerId, PowerTypes} from "../utils"
-import {userType} from "../hooks/userContext";
+import {AdminData} from "../types/adminTypes";
 
 type Props = {
     userPower?: PowerTypes
-    user?: userType
+    user?: AdminData.User
 };
 
 

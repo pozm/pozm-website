@@ -1,20 +1,5 @@
 import { createContext } from "react";
+import {AdminData} from "../types/adminTypes";
 
-export type userType = {
-    ID: number;
-    Username: string;
-    Password: string;
-    PowerID: number;
-    Email: string;
-    RegisteredAT: string;
-    Subscriptions?: any;
-    RegisteredIP: string;
-    LastIP: string;
-    KEYID: string;
-    AvatarUri?: any;
-    password?: any;
-    DiscordID : string,
-    DiscordUser : string
-} | null
 
-export default createContext<{user:userType,setUser:React.Dispatch<React.SetStateAction<userType>>}|null>(null)
+export default createContext<{user:AdminData.User,setUser:React.Dispatch<React.SetStateAction<AdminData.User>>}|null>(null)

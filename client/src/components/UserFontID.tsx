@@ -16,7 +16,7 @@ export const UserFontID: React.FC<Props> = (props) => {
             if (jsn?.error) setUser(({Username : 'Unknown', PowerId:0, ID: props.ID} as any))
             else setUser(jsn.data)
         })
-    },[setUser])
+    },[setUser,props.ID])
     return <Link to={'/user/'+props.ID} ><span id={parsePowerId(user?.PowerID ?? 0) as string}>{user?.Username}</span></Link>
 }
 
