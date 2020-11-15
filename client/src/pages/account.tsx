@@ -7,6 +7,7 @@ import {Alert, Button, Icon, List, Modal, Panel, PanelGroup} from "rsuite";
 import {DiscordLinkUrl, parsePowerId} from "../utils";
 import useUser from "../hooks/useUser";
 import UserFont from "../components/UserFont";
+import UserBand from "../components/UserBand";
 
 type Props = {};
 
@@ -20,7 +21,6 @@ export const AccountPage: React.FC<Props> = () => {
         fetch("/api/Keys/CreatedInvites", {method: "GET"}).then(v => {
             return v.json()
         }).then(jsn=>{
-            console.log(jsn)
             if (jsn.error) {
                 return setInvites([])
             }
@@ -38,7 +38,6 @@ export const AccountPage: React.FC<Props> = () => {
         fetch("/api/Keys/CreateInvite", {method: "POST"}).then(v => {
             return v.json()
         }).then(jsn=>{
-            console.log(jsn)
             if (jsn.error) {
                 return Alert.error( <div> {jsn.message} </div> )
             }
@@ -55,26 +54,10 @@ export const AccountPage: React.FC<Props> = () => {
     }, [ModalStateUpdate])
     return (
         <div className="home">
-            <div style={{width: "100%", marginBottom: 50, height: 200, background: "#ffffff11", display: "flex"}}
-                 className={" p-4 px-5"}>
-                <div className="AvatarText" style={{fontSize: "xxx-large", alignSelf: "center"}}>
-                    {user?.Username ?? ""}
-                    <p style={{fontSize: "medium"}}> {user?.DiscordUser && user?.DiscordUser + ' • '} <UserFont user={user}> {parsePowerId(user?.PowerID ?? 0)} </UserFont> • <Link
-                        to={"/user/" + user?.ID}>Goto profile</Link></p>
-                </div>
-                <div
-                    className="avatarParent"
-                    style={{marginLeft: "auto"}}
-                >
-                    <div className="CircleMask" style={{marginRight: "10px"}}>
-                        <img
-                            src={user?.AvatarUri}
-                            width={128}
-                            alt=""
-                        />
-                    </div>
-                </div>
-            </div>
+            <UserBand user={user!} desc={<>
+                <p style={{fontSize: "medium"}}> {user?.DiscordUser && user?.DiscordUser + ' • '} <UserFont user={user}> {parsePowerId(user?.PowerID ?? 0)} </UserFont> • <Link
+                    to={"/user/" + user?.ID}>Goto profile</Link></p>
+            </>} />
 
             <Modal backdrop="static" show={ModalState} onHide={Close} size="xs">
                 <Modal.Body>
