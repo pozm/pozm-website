@@ -86,7 +86,7 @@ const App: React.FC<Props> = () => {
                         <Navigation/>
                     </div>
                     <Container className="container-fluid main">
-                        <Content style={{overflow: "hidden"}}>
+                        <Content style={{overflow: "hidden",minHeight:"100vh"}}>
                             {loading ?
                                 <Loader size={"lg"} center content={"Requesting data..."} vertical/>
                                 :
@@ -146,7 +146,6 @@ const App: React.FC<Props> = () => {
                                     <Route component={Page404}/>
                                 </Switch>
                             }
-                            <footer><p style={{color:"#0C0F15",zIndex:0,userSelect:"none", position:"absolute"}}> If you can see this, then you have dark reader, or some other ext enabled, i recommend that you disable it. </p></footer>
                         </Content>
                     </Container>
                 </div>

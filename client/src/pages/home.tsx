@@ -38,30 +38,29 @@ export const Home: React.FC<Props> = () => {
     const isMobile = useMediaQuery({query: '(max-width: 760px)'});
     return (
         <div className={"home"}>
-            <Panel bordered={true} shaded bodyFill style={{backgroundColor: "#ffffff11", padding: "15px 0px"}}
+            <Panel style={{backgroundColor: "#ffffff11", padding: "15px 0px"}}
                    className="my-2">
                 <h1 className="display-3">Hello{user?.ID && <>, <UserFont user={user}>{user?.Username}</UserFont> </> }</h1>
                 <p className="lead">Welcome to my website.</p>
-                <hr className="my-4"/>
+                {/*<hr className="my-4"/>*/}
 
             </Panel>
-            <div className="row justify-content-md-center">
+            <div className="row justify-content-md-center" >
                 <div className={`col col-${isMobile ? 12 : 3}`}>
 
                     <h1 className={"font-weight-light"}>So like who are you?</h1>
                     <p>well uhh im a programmer focused in js,c#,c++,py, and more. Im currently a developer at <a
                         href={"https://discord.gg/psu"}>PSU</a></p>
                 </div>
-                <div className="col col-lg-4">
+                <div className="col col-lg-4" >
 
                     <h1 className={"font-weight-light"}>Some cool people</h1>
                     <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 2}`}>
                         { coolUsers ? renderCoolUsers() : <Loader/> }
-
                     </div>
                 </div>
             </div>
-            {/*<div className={"seper"}/>*/}
+            <div style={{marginTop:"30px"}} >
                 <div className="wave-38scNw" aria-hidden="true" style={{marginTop:"10px"}} >
                     <svg className="wave-1hkxOo" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100"
                          preserveAspectRatio="none">
@@ -77,26 +76,25 @@ export const Home: React.FC<Props> = () => {
                 <h1 className={"font-weight-light"} style={{width:"99%"}} >Projects im working on </h1>
                 <hr className={""} />
             </div>
-            <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 2}`} style={{backgroundColor:"var(--secondary-darkColor)"}} >
-                <div className={`col col-${isMobile ? 12 : 3}`}>
+            <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 3}`} style={{backgroundColor:"var(--secondary-darkColor)"}} >
+                <div className={`col `}>
 
                     <h2 className={"font-weight-light"}>Discord token gen</h2>
                     <p> Discord token gen is a private tool which allows us to generate email verified discord user tokens. We plan to use it to sell tokens in bulk <a
                         href={"https://discord.gg/HfpwPCCt6h"}>Our Discord</a></p>
                 </div>
-                <div className={`col col-${isMobile ? 12 : 3}`}>
+                <div className={`col `}>
 
                     <h2 className={"font-weight-light"}>Bot tools</h2>
                     <p>Bot tools is a tool used to manage mass discord tokens (bot or user). with alot of functionality & accessibility to run lua, from inside the tool you are able to see servers, and tokens you have stored.<a
                         href={"https://discord.gg/HfpwPCCt6h"}>Our Discord</a></p>
                 </div>
-                <div className={`col col-${isMobile ? 12 : 3}`}>
+                <div className={`col `}>
 
                     <h2 className={"font-weight-light"}>PSU whitelist</h2>
                     <p>This project is a whitelist which can be bought and integrated with your scripts very easily, without having to setup a database or a backend to handle users. <a
                         href={"https://discord.gg/psu"}>PSU discord</a></p>
                 </div>
-
             </div>
 
                 <div className="wave-38scNw invertedWave-2Uzmgv" style={{transform:"matrix(1,0,0,-1,0,0)"}} aria-hidden="true">
@@ -107,6 +105,7 @@ export const Home: React.FC<Props> = () => {
                               fill="var(--secondary-darkColor)"/>
                     </svg>
                 </div>
+            </div>
         </div>
     );
 }

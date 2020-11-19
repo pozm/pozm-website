@@ -14,7 +14,7 @@ type Props = {
 const UserBand: React.FC<Props> = (props) => {
     const isMobile = useMediaQuery({query: '(max-width: 760px)'});
     return (
-        <div style={{width:"100%", marginBottom:50, height:!isMobile ? 200 : "auto", background: "#ffffff11", flexFlow: !isMobile ? "wrap" : "column-reverse" , display:"flex", borderRadius: "0px 0px 6px 6px" }} className={" p-4 px-5"} >
+        <div style={{width:"100%", marginBottom:50,marginTop:10, height:!isMobile ? 200 : "auto", background: "var(--secondaryColor)", flexFlow: !isMobile ? "wrap" : "column-reverse" , display:"flex", borderRadius: "10px" }} className={" p-4 px-5"} >
             <div className="AvatarText" style={{fontSize:"xxx-large",alignSelf:"center"}} >
                 <UserFont userPower={parsePowerId(props.user?.PowerID) as PowerTypes}>{props.user?.Username ?? ""}</UserFont>
                 {props.desc}

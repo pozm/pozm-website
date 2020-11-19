@@ -144,7 +144,6 @@ APIRouter.get("/linkDiscord", RequireLoggedIn , async (req,res) => {
         }).then(member=>{
             res.send(`<script> window.localStorage.setItem("DiscordState","1"); window.location.replace("/") </script>`)
         }, (reason : Error) => {
-            // console.log(reason, require("util").inspect(reason), typeof reason)
             res.send(`<script> window.localStorage.setItem("DiscordState",${reason.message.indexOf("banned") >= 1 ? "2" : "3"}); window.location.replace("/") </script>`)
         })
         // res.json({

@@ -45,7 +45,7 @@ export function uuidv4() {
     });
 }
 
-async function AsyncQuery<T>(query : string,args?:any[], HandleError: (err:MysqlError) => void= (err)=>{throw err} ) : Promise<(T|null)> {
+async function AsyncQuery<T>(query : string,args?:any[], HandleError: (err:MysqlError) => void= (err)=>{} ) : Promise<(T|null)> {
     return new Promise(resolve => {
         
         let func = (err:MysqlError|null,result:any)=>{

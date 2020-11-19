@@ -109,6 +109,7 @@ export const AccountPage: React.FC<Props> = () => {
                     <Button color={"orange"} onClick={CreateInvite} disabled={((user?.CreatedInvites ?? 99) >= 2) && user?.ID !== 2 } >
                         Create invite
                     </Button>
+                    <p>you can only create <b>{(user?.CreatedInvites ?? 0) == 0 ? 2 : (user?.CreatedInvites ?? 0) % 2}</b> invites.</p>
                     <List bordered hover className={"my-2"} >
 
                         {Invites?.map((v,idx)=>{

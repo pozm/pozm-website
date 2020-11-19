@@ -1,3 +1,29 @@
+.DiscordUserParent {
+    display: flex;
+    flex-flow: wrap;
+    align-items: center;
+    padding: 7px;
+    border-radius: 8px;
+    background-color: var(--secondaryColor);
+
+    transition: box-shadow 250ms;
+
+}
+
+.DiscordUserParent:hover {
+
+    transition: box-shadow 250ms;
+    box-shadow: inset 0px 0px 0px 3px var(--primaryColor), 0 0 1px 3px #0d73d4;
+
+}
+
+.Avatar {
+    border-radius: 50%;
+    margin-right: 7px;
+}
+
+
+
 .pcoolbg {
     color: rgb(235, 235, 235);
     word-break: break-word;
@@ -34,6 +60,9 @@
         /* margin :  0 10.2rem 20.2rem; */
         transition: transform .3s ease;
     }
+    .DiscordUserParent{
+        /*margin-bottom: 10px;*/
+    }
 
 }
 
@@ -47,6 +76,9 @@
         transform: scale(1.05);
         /*margin : 1.05rem;*/
         transition: transform .3s ease;
+    }
+    .DiscordUserParent {
+         margin-bottom: 10px;
     }
 
 }
