@@ -8,6 +8,8 @@ import {DiscordLinkUrl, parsePowerId} from "../utils";
 import useUser from "../hooks/useUser";
 import UserFont from "../components/UserFont";
 import UserBand from "../components/UserBand";
+import Box from "../components/Box";
+import BoxImage from "../components/BoxImage";
 
 type Props = {};
 
@@ -83,17 +85,25 @@ export const AccountPage: React.FC<Props> = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <PanelGroup accordion>
-                <Panel header={"Content you have access to"} eventKey={1} collapsible bordered>
-                    <div
-                        className="row align-items-center my-5"
-                        style={{display: 'flex', justifyContent: 'center'}}
-                    >
-                        <InfoBox linkTo="webhook" title="Webhook" Desc="Manage discord webhooks easily"/>
-                        <InfoBox linkTo="TheCollection" title="The collection" Desc="oh yes."/>
-                        {(user?.PowerID ?? 0) >= 5 && <InfoBox linkTo="admin" title="Admin" Desc="The admin panel"/>}
-                    </div>
-                </Panel>
+            <div style={{ display:"flex", flexFlow:"wrap", justifyContent:"center", padding: "0 2vw",backgroundColor:"var(--secondary-darkColor)", borderRadius:"8px",marginBottom:"50px" }} >
+
+                <BoxImage style={{flex:"0 0 200px"}} link={"/theCollection"} url={"https://static.wikia.nocookie.net/otaku_encyclopedia/images/8/80/Ahegao_Image.jpg"} >
+                    <h3 style={{ fontSize:"calc(100% + 10px)" }}>The Collection</h3>
+                </BoxImage>
+                <BoxImage style={{flex:"0 0 200px"}} link={"/webhook"} url={"https://cdn.iconscout.com/icon/free/png-256/webhook-555333.png"} >
+                    <h3 style={{ fontSize:"calc(100% + 10px)" }} >Web-Hook Tools</h3>
+                </BoxImage>
+                {(user?.PowerID ?? 0) >= 5 &&
+                <BoxImage style={{flex: "0 0 200px"}} link={"/admin"}
+                          url={"https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"}>
+                    <h3>Admin</h3>
+                </BoxImage>
+                }
+
+
+            </div>
+
+            <PanelGroup >
                 <Panel className={"my-3"} header={"User info"} eventKey={2} collapsible bordered>
                     <p className={"font-weight-light"}> Username: {user?.Username} </p>
                     <p className={"font-weight-light"}> Account ID: {user?.ID} </p>

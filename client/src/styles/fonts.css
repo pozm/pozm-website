@@ -20,22 +20,24 @@ span#ADMIN {
 }
 
 
-span#cool {
+span#friend {
     background-clip: border-box;
     -webkit-background-clip: text;
-    color: #d4d4d4;
+    color: #d0792c;
     font-weight: 700;
-    text-shadow: 0 0 8px rgb(255, 255, 255);
+    text-shadow: 0 0 8px rgb(203, 171, 150);
     text-decoration: none;
     animation:coolanim 5s infinite alternate ease;
 }
 
 @keyframes coolanim{
     from{
-        filter: brightness(60%);
+        color: #d0792c;
+        text-shadow: 0 0 8px rgb(203, 171, 150);
     }
     to{
-        filter:brightness(100%);
+        color: #d41919;
+        text-shadow: 0 0 8px rgb(203, 150, 150);
     }
 }
 

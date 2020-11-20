@@ -5,7 +5,7 @@ export function uuidv4() {
     });
 }
 export type PowerTypes = "user"|"cool"|"x"|"ADMIN"
-export const PowerArray = ["user","cool","x","x","x","ADMIN"]
+export const PowerArray = ["user","friend","x","x","x","ADMIN"]
 export function parsePowerId(u_id : string | number) {
     let id = Number(u_id)
     return PowerArray[id]
