@@ -21,23 +21,7 @@ const OAuth = new DiscordOAuth();
 const APIRouter = express.Router()
 
 //#region pretty cool...
-let theFile : {[x:string] : string[]}
 
-function updateTheFile() {
-    readFile("./server/hData.json").then(txt => {
-        let jsn = JSON.parse(txt.toString())
-        theFile = theFile === jsn ? theFile : jsn
-        for (let [key,val] of Object.entries(theFile)) {
-            theFile[key] = val.reverse()
-        }
-    })
-}
-updateTheFile()
-setInterval(updateTheFile,1e3*60)
-APIRouter.get('/test', (req,res) => {
-    console.log('working');
-    res.json({Working:true})
-});
 //#endregion
 
 
@@ -180,8 +164,12 @@ APIRouter.get('/getUser', RequireLoggedIn, async (req,res) => {
 
 APIRouter.post("/theCol", RequireLoggedIn, async (req,res) => {
     let {id,type} = req.body
-    if (!theFile[type]) type = "Normal"
-    return res.json({Files:theFile[type ?? "Normal"].slice(id*20,id*20+20), Fit:Math.ceil(theFile[type ?? "Normal"].length/20), types:Object.keys(theFile)})
+    console.log("b")
+    let Resp = await AsyncQuery<[ {Url:string}[], {Type:string}[],{'count(*)':number}[]  ]>(`select Url from Images.Hentai where Type = ? ORDER BY ID DESC limit 50 offset ?; select distinct Type from Images.Hentai;select count(*) from Images.Hentai where Type = ?`, [type,id*50,type] )
+    console.log(Resp)
+    if (!Resp) return res.json({error : 26, message: "what"}) ;
+    console.log(Resp[0].map(v=> v.Url ), Resp[1][0].Type, Resp[2][0]['count(*)']  )
+    return res.json({Files:Resp[0].map(v=> v.Url ), Fit:Math.round(Resp[2][0]['count(*)']/50), types:Resp[1].map(v=>v.Type)})
 })
 APIRouter.get("/adminData", RequireAdmin, async(req,res)=>{
     let users = await AsyncQuery<{[x:string]:any}[]>("select *, NULL as password from `whitelist`.`account`", [])

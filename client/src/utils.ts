@@ -18,3 +18,11 @@ export function genRand(min : number, max : number) {
 }
 export const DiscordLinkUrl = "https://discord.com/api/oauth2/authorize?client_id=769669036514345002&redirect_uri=https%3A%2F%2Fwww.pozm.pw%2Fapi%2FlinkDiscord&response_type=code&scope=guilds.join%20identify"
 export const fetcher = (url: RequestInfo, data: RequestInit | undefined) => fetch(url,{...data}).then(res => res.json())
+
+export const ConvertTypeCol = (t : number) => {
+    switch (t) {
+        case 1:
+            return "Normal"
+
+    }
+}

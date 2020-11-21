@@ -15,6 +15,7 @@ import {
     Slider
 } from "rsuite";
 import "../styles/coolpage.css"
+import {ConvertTypeCol} from "../utils";
 
 type Props = {};
 
@@ -85,7 +86,7 @@ export const TheCollection: React.FC<Props> = (props) => {
     }, [data, onload, isMobile,isLoaded,isVideo,setViewing])
 
     let getTypesAsRatio = useCallback(() => {
-        return data?.types?.map((v, k) => <Radio value={v} key={k}> {v} </Radio>)
+        return data?.types?.map((v, k) => <Radio value={Number(v)} key={k + '__!' + v}> { ConvertTypeCol(Number(v))} </Radio>)
     }, [data?.types])
     // useMemo(()=>{console.log(loaded)},[loaded])
     return (
@@ -111,7 +112,7 @@ export const TheCollection: React.FC<Props> = (props) => {
                 <RadioGroup
                     inline
                     name="radioList"
-                    value={globData.radio}
+                    value={Number(globData.radio)}
                     onChange={value => {
                         console.log("going to update")
                         window.localStorage.setItem("type", value)
