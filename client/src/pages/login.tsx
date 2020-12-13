@@ -1,9 +1,11 @@
 import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import {Redirect} from "react-router-dom";
-import {Alert} from "rsuite";
+import {Alert, Button, Icon} from "rsuite";
 import AccountForm from "../components/AccountForm";
 import useUser from "../hooks/useUser";
+import {ReactComponent as DiscordLogo} from "../images/ico/Discord-Logo-White.svg"
+import {DiscordloginUrl} from "../utils";
 
 let recaptcha = React.createRef<ReCAPTCHA>();
 
@@ -35,14 +37,14 @@ const Login: React.FC<Props> = ({RedirectTo = "/"}) => {
             return;
         }
         // let {data,error} = useSWR("/api/LogintoAccount")
-        let data = await fetch("/api/LogintoAccount", {
+        let data = await fetch("/api/Account/Login", {
             body: JSON.stringify({...state.formValue, Recaptcha: state.Recaptcha}),
             mode: "same-origin",
             method: "POST",
             credentials: "same-origin"
         });
         if (data?.ok) {
-            mutate("/api/getUser")
+            mutate("/api/Account/me")
         } else {
             Alert.error((await data.json()).message)
             recaptcha.current?.reset();
@@ -64,6 +66,8 @@ const Login: React.FC<Props> = ({RedirectTo = "/"}) => {
                     SubmitFunc={LoginFunc}
                 />
             </div>
+            <p> or... </p>
+            <Button href={DiscordloginUrl} > <DiscordLogo width={32} /> Login with discord</Button>
             <p> dm me for invite if you do not have an account.</p>
         </div>
     );

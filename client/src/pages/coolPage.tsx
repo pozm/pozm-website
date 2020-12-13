@@ -1,4 +1,4 @@
-import React, {createRef, useCallback, useEffect, useState} from "react";
+import React, {createRef, useCallback, useEffect, useMemo, useState} from "react";
 import MediaQuery, {useMediaQuery} from "react-responsive";
 import {useHistory, useParams} from "react-router-dom";
 import {
@@ -15,7 +15,7 @@ import {
     Slider
 } from "rsuite";
 import "../styles/coolpage.css"
-import {ConvertTypeCol} from "../utils";
+import {ConvertTypeCol, uuidv4} from "../utils";
 
 type Props = {};
 
@@ -29,14 +29,14 @@ export const TheCollection: React.FC<Props> = (props) => {
     let his = useHistory();
     let [data, setdata] = useState<{ [x: string]: string[] | number, types: string[], Files: string[], Fit: number }>()
     let [globData, setGlobData] = useState<{ [x: string]: any }>({
-        radio: window.localStorage.getItem("type") ?? "Normal",
+        radio: window.localStorage.getItem("type") ?? 1,
         ipr: window.localStorage.getItem("ipr") ?? 2,
         loaded: {},
         vi: ''
     })
     const isMobile = useMediaQuery({query: '(max-width: 760px)'});
     useEffect(() => {
-        fetch('/api/theCol', {
+        fetch('/api/Content/theCol', {
             body: JSON.stringify({id, type: globData?.radio}),
             method: "POST"
         }).then(txt => {
@@ -65,17 +65,42 @@ export const TheCollection: React.FC<Props> = (props) => {
         setGlobData({...globData, loaded: {}})
         his.replace("/TheCollection/" + (newId))
     }, [setGlobData, globData, his])
+    let onCtxCapture = useCallback((event: React.MouseEvent<HTMLImageElement, MouseEvent>)=>{
+        //console.log(event.button)
+        if (event.button === 2) {
+            let j = $(event.target)
+            j.prop('src',j.prop('src').replace("media","cdn").replace("net","com"))
 
+        }
+    },[])
+    let onCtxCaptureRevert = useCallback((event: React.MouseEvent<HTMLImageElement, MouseEvent>)=>{
+        //console.log(event.button)
+            let j = $(event.target)
+            j.prop('src',j.prop('src').replace("cdn","media").replace("com","net"))
+
+    },[])
 
     let getDataAsImages = useCallback(() => {
         let d = data?.Files?.map((v, k) => !isVideo(k)
-            ? <div key={k} onClick={() => setViewing(v)} style={{minHeight: 200}} className={`col my-2`}>
-                {<img hidden={!isLoaded(k)}
-                      onLoad={onload} id={"key_" + k}
-                      className="col-12 coolimg"
-                      src={v}
-                      alt={""}
-                />}
+            ? <div key={k} onClick={(e) => {
+                setViewing(v);
+            }} style={{minHeight: 200}} className={`col my-2`}>
+                {
+
+                    <img hidden={!isLoaded(k)}
+                         onLoad={onload} id={"key_" + k}
+                         className="col-12 coolimg"
+                         src={v}
+                         alt={""}
+                         loading={"lazy"}
+                         onMouseDown={onCtxCapture}
+                         onMouseDownCapture={onCtxCapture}
+                         onPointerDown={onCtxCapture}
+                         onPointerDownCapture={onCtxCapture}
+                         onMouseLeave={onCtxCaptureRevert}
+                    // onContextMenu={onCtxCapture}
+                    />
+                }
                 {(!isLoaded(k)) &&
                 <Loader size="lg"/>}
             </div>
@@ -88,11 +113,9 @@ export const TheCollection: React.FC<Props> = (props) => {
     let getTypesAsRatio = useCallback(() => {
         return data?.types?.map((v, k) => <Radio value={Number(v)} key={k + '__!' + v}> { ConvertTypeCol(Number(v))} </Radio>)
     }, [data?.types])
-    // useMemo(()=>{console.log(loaded)},[loaded])
     return (
-        <div className="home">
-
-            {globData.vi !== "" && (
+        <>
+        {globData.vi !== "" && (
                 <div>
                     <div style={{
                         position: "fixed",
@@ -103,12 +126,13 @@ export const TheCollection: React.FC<Props> = (props) => {
                         backgroundColor: "rgba(0, 0, 0, 0.66)"
                     }} className={"coolimg"} onClick={() => setViewing("")}/>
 
-                    <img src={globData.vi} alt={""} className={"BigCoolImg"}/>
+                    <img src={globData.vi.replace("media","cdn").replace("net","com")} alt={""} className={"BigCoolImg"}/>
 
                 </div>
-            )}
+        )}
+        <div className="container home">
 
-            <Panel shaded className="container my-2" bordered>
+            <Panel className="my-2">
                 <RadioGroup
                     inline
                     name="radioList"
@@ -121,7 +145,7 @@ export const TheCollection: React.FC<Props> = (props) => {
                 >
                     {getTypesAsRatio()}
                 </RadioGroup>
-                <div>{(data?.Fit as unknown as number ?? 0) * 20} images in db</div>
+                <div>{(data?.Fit as unknown as number ?? 0) * 50} images in db</div>
                 <br/>
                 <MediaQuery minDeviceWidth={1824}>
                     Images per row
@@ -179,7 +203,9 @@ export const TheCollection: React.FC<Props> = (props) => {
                 <InputNumber min={0} buttonAppearance={"link"} prefix={"jump to "} max={(data?.Fit ?? 0) - 1} value={id}
                              onChange={(v) => GotoId(Number(v))}/>
             </Panel>
+
         </div>
+    </>
     );
 }
 

@@ -34,7 +34,7 @@ export const BoxImage: React.FC<Props> = (props) => {
     },[setHoverState])
 
     let content = (
-            <Animation.Fade in={hoverState} >{(propsa, ref) =>
+            <Animation.Fade in={hoverState} >{ (propsa, ref) =>
 
                 <ImageDesc ref={ref} {...propsa} >{props.children}</ImageDesc>
 

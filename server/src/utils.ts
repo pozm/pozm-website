@@ -15,13 +15,42 @@ async function getIdFromUser (user:number) {
     })
 
 }
+export const dataStructures = {
+    account: `CREATE TABLE if not exists \`whitelist\`.\`account\` (
+        \`id\` int NOT NULL AUTO_INCREMENT,
+        \`username\` varchar(15) NOT NULL,
+        \`password\` text NOT NULL,
+        \`email\` text NOT NULL,
+        \`registeredAt\` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+        \`powerId\` int NOT NULL DEFAULT '0',
+        \`subscriptions\` json,
+        PRIMARY KEY (\`id\`)
+    )`,
+    accountPWReset: `create table if not exists \`whitelist\`.\`PWreset\`(
+        \`id\` varchar(255) NOT NULL,
+        \`userid\` INT NOT NULL,
+        \`expires\` DATE NULL,
+        PRIMARY KEY (\`id\`),
+        UNIQUE INDEX \`id_UNIQUE\` (\`id\` ASC),
+        UNIQUE INDEX \`userid_UNIQUE\` (\`userid\` ASC));
+    `,
+    gay: `CREATE TABLE if not exists \`is-gay\`.\`gay\` (
+        \`user\` VARCHAR(255) NOT NULL,
+        \`id\` VARCHAR(45) NOT NULL,
+        \`by\` VARCHAR(255) NOT NULL,
+        \`reason\` VARCHAR(255) NOT NULL DEFAULT 'They are gay',
+        \`at\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`),
+        UNIQUE INDEX \`id_UNIQUE\` (\`id\` ASC));
+    `,
+};
 
 async function getDataFromId (id:string) {
     if (!id) return null;
     return new Promise(res => {
         
-        con.query('select *, NULL AS Password from `whitelist`.`account` where ID = ?',id, (err, res2) => {
-            
+        con.query('select account.*, NULL AS Password, count(keycodes.CreatedBy) as CreatedInvites  from `whitelist`.`account` left join whitelist.keycode as keycodes on CreatedBy = ID where ID = ?',id, (err, res2) => {
+            // console.log(res2)
             if (err) throw err
             if (0 in res2) {
                 return res( res2[0])

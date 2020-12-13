@@ -18,7 +18,7 @@ export const UserPage: React.FC<Props> = () => {
     let {id} = useParams<{ id: string }>()
     let [fetchedUser,setFetchedUser] = useState<AdminData.User >()
     useEffect(() => {
-        fetch('/api/user/'+id, {
+        fetch('/api/Users/'+id, {
             method: "GET"
         }).then(txt => {
             txt.json().then(jsn => {

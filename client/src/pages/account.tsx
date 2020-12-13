@@ -30,7 +30,7 @@ export const AccountPage: React.FC<Props> = () => {
         })
     },[setInvites])
     let onDelete = useCallback(() => {
-        fetch("/api/account", {method: "DELETE"}).then(v => {
+        fetch("/api/Account", {method: "DELETE"}).then(v => {
             if (v.ok) {
                 window.location.reload()
             }

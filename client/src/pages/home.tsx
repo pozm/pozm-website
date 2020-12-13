@@ -5,7 +5,6 @@ import {useMediaQuery} from "react-responsive";
 import useUser from "../hooks/useUser";
 import UserFont from "../components/UserFont";
 import {AdminData} from "../types/adminTypes";
-import {genRand} from "../utils";
 import {Link} from "react-router-dom";
 
 type Props = {};
@@ -13,55 +12,62 @@ type Props = {};
 
 export const Home: React.FC<Props> = () => {
     const {user} = useUser()
-    const [coolUsers,setcoolUsers] = useState<AdminData.User[]>()
-    useEffect(()=>{
-        fetch("/api/users").then(resp=>{
+    const [coolUsers, setcoolUsers] = useState<AdminData.User[]>()
+    useEffect(() => {
+        fetch("/api/Users?a=2&r=true&p=gt-0").then(resp => {
             return resp.json()
-        }).then(jsn=>{
+        }).then(jsn => {
             if (jsn?.error) return Alert.error(<div> there was an issue with loading users</div>)
-            else return setcoolUsers(jsn?.data ?? [])
+            else return setcoolUsers(jsn?.data.users ?? [])
         })
-    },[setcoolUsers])
+    }, [setcoolUsers])
 
     const renderCoolUsers = useCallback(() => {
-        let n = genRand(0,coolUsers!.length-1)
-        let n2 = n === coolUsers!.length-1 ? genRand(0,n-1) : genRand(n+1,coolUsers!.length-1)
-        return coolUsers?.filter((val, idx ) => idx === n2 || idx === n).map(v=>{
+        return coolUsers?.map(v => {
             return (
                 <div className={"col"}>
-                    <DiscordUser userName={<Link to={"/user/"+v.ID} ><UserFont user={v}> {v.Username} </UserFont></Link>}  avatar={v.AvatarUri}/>
+                    <DiscordUser
+                        userName={<Link to={"/user/" + v.ID}><UserFont user={v}> {v.Username} </UserFont></Link>}
+                        avatar={v.AvatarUri}/>
                 </div>
             )
         })
-    },[coolUsers])
+    }, [coolUsers])
 
     const isMobile = useMediaQuery({query: '(max-width: 760px)'});
     return (
         <div className={"home"}>
             <Panel style={{backgroundColor: "#ffffff11", padding: "15px 0px"}}
                    className="my-2">
-                <h1 className="display-3">Hello{user?.ID && <>, <UserFont user={user}>{user?.Username}</UserFont> </> }</h1>
+                <h1 className="display-3">Hello{user?.ID && <>, <UserFont
+                    user={user}>{user?.Username}</UserFont> </>}</h1>
                 <p className="lead">Welcome to my website.</p>
                 {/*<hr className="my-4"/>*/}
 
             </Panel>
-            <div className="row justify-content-md-center" >
+            <div className="row justify-content-md-center">
                 <div className={`col col-${isMobile ? 12 : 3}`}>
 
                     <h1 className={"font-weight-light"}>So like who are you?</h1>
-                    <p>well uhh im a programmer focused in js,c#,c++,py, and more. Im currently a developer at <a
-                        href={"https://discord.gg/psu"}>PSU</a></p>
+                    <p>I'm a developer with knowledge of various languages, primarily focused in js/ts, c#, c++, and
+                        python. I'm currently intrigued by golang.</p>
                 </div>
-                <div className="col col-lg-4" >
+                <div className="col col-lg-4">
 
                     <h1 className={"font-weight-light"}>Some cool people</h1>
                     <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 2}`}>
-                        { coolUsers ? renderCoolUsers() : <Loader/> }
+                        {coolUsers ? renderCoolUsers() : <Loader/>}
                     </div>
                 </div>
             </div>
-            <div style={{marginTop:"30px"}} >
-                <div className="wave-38scNw" aria-hidden="true" style={{marginTop:"10px"}} >
+
+
+
+            <div style={{marginTop: "30px"}}>
+
+                {/*wave*/}
+
+                <div className="wave-38scNw" aria-hidden="true" style={{marginTop: "10px"}}>
                     <svg className="wave-1hkxOo" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100"
                          preserveAspectRatio="none">
                         <path
@@ -72,32 +78,72 @@ export const Home: React.FC<Props> = () => {
                     </svg>
                 </div>
 
-            <div className="row justify-content-md-center" style={{backgroundColor:"var(--secondary-darkColor)"}} >
-                <h1 className={"font-weight-light"} style={{width:"99%"}} >Projects im working on </h1>
-                <hr className={""} />
-            </div>
-            <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 3}`} style={{backgroundColor:"var(--secondary-darkColor)"}} >
-                <div className={`col `}>
-
-                    <h2 className={"font-weight-light"}>Discord token gen</h2>
-                    <p> Discord token gen is a private tool which allows us to generate email verified discord user tokens. We plan to use it to sell tokens in bulk <a
-                        href={"https://discord.gg/HfpwPCCt6h"}>Our Discord</a></p>
+                <div className="row justify-content-md-center"
+                     style={{marginLeft: 0, marginRight: 0, backgroundColor: "var(--secondary-darkColor)"}}>
+                    <h1 className={"font-weight-light"} style={{width: "99%"}}>Bingus llc projects</h1>
+                    <hr className={""}/>
                 </div>
-                <div className={`col `}>
+                <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 3}`}
+                     style={{marginLeft: 0, marginRight: 0, backgroundColor: "var(--secondary-darkColor)"}}>
+                    <div className={`col`}>
 
-                    <h2 className={"font-weight-light"}>Bot tools</h2>
-                    <p>Bot tools is a tool used to manage mass discord tokens (bot or user). with alot of functionality & accessibility to run lua, from inside the tool you are able to see servers, and tokens you have stored.<a
-                        href={"https://discord.gg/HfpwPCCt6h"}>Our Discord</a></p>
+                        <h2 className={"font-weight-light"}>Discord token gen</h2>
+                        <p>
+                            This is a tool we will use to mass create tokens for discord and sell for groundbreaking low prices as a reputable source. <br/>
+                            Our tool works extremely fast and is able to generate over 20 tokens per minute with a single thread.
+                        </p>
+                    </div>
+                    <div className={`col col-4`}>
+
+                        <h2 className={"font-weight-light"}>Bot tools</h2>
+                        <p>
+                            This is an open sourced project used for managing discord tokens.
+                        </p>
+                        <h3>Features</h3>
+                        <ul style={{justifyContent:"initial"}} >
+                            <li>Ability to load up bot or user accounts</li>
+                            <li>Easy and modular to use</li>
+                            <li>Ability to manipulate the accounts with lua</li>
+                            <li>And more...</li>
+                        </ul>
+                        <h3> Why choose us? </h3>
+                        <ul>
+                            <li>Modern UI</li>
+                            <li>Extremely fast</li>
+                            <li>Scalable</li>
+                            <li>Customizable</li>
+                        </ul>
+                    </div>
                 </div>
-                <div className={`col `}>
 
-                    <h2 className={"font-weight-light"}>PSU whitelist</h2>
-                    <p>This project is a whitelist which can be bought and integrated with your scripts very easily, without having to setup a database or a backend to handle users. <a
-                        href={"https://discord.gg/psu"}>PSU discord</a></p>
+                <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 3}`}
+                     style={{marginLeft: 0, marginRight: 0, paddingBottom:10 , backgroundColor: "var(--secondary-darkColor)"}}>
+                    <div className={`col `}>
+                        <h3 className={"font-weight-light"} style={{width: "99%"}}>Created by </h3>
+                        <hr className={""}/>
+                        {/*<p>bingus llc, our members conclude of </p>*/}
+                    </div>
                 </div>
-            </div>
 
-                <div className="wave-38scNw invertedWave-2Uzmgv" style={{transform:"matrix(1,0,0,-1,0,0)"}} aria-hidden="true">
+                <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 6}`} style={{marginLeft:0,marginRight:0,paddingBottom:10, backgroundColor:"var(--secondary-darkColor)"}} >
+                    <div className={`col `}>
+                        <DiscordUser userName={'Pozm'} style={{backgroundColor:"#292F37"}} avatar={'https://cdn.discordapp.com/avatars/288062966803333120/c9c4fc92c587a818f2794def05681daa.png?size=128'} />
+                    </div>
+                    <div className={`col `}>
+                        <DiscordUser userName={'Bork'} reff={"http://borks.club"} style={{backgroundColor:"#292F37"}} avatar={'https://cdn.discordapp.com/avatars/784212696367104010/ba4e8461d490745cb73a622074e70ba1.png?size=128'} />
+                    </div>
+                </div>
+
+
+                <div className={`row justify-content-md-center row-cols-${isMobile ? 1 : 3}`}
+                     style={{marginLeft: 0, marginRight: 0, backgroundColor: "var(--secondary-darkColor)"}}>
+                    <a href={"https://discord.gg/HfpwPCCt6h"}><h4> Our discord </h4></a>
+                </div>
+
+                {/*wave*/}
+
+                <div className="wave-38scNw invertedWave-2Uzmgv" style={{transform: "matrix(1,0,0,-1,0,0)"}}
+                     aria-hidden="true">
                     <svg className="wave-1hkxOo" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100"
                          preserveAspectRatio="none">
                         <path className="wavePath-haxJK1"

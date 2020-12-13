@@ -14,7 +14,7 @@ const AdminPage: React.FC<Props> = () => {
     let [KnownPower, KnownPowerUpdate] = useState(0)
 
     const UpdateData = useCallback(() => {
-        fetch('/api/adminData').then(txt => {
+        fetch('/api/Content/admin').then(txt => {
             txt.json().then(jsn => {
                 setData(jsn)
             })
@@ -36,7 +36,7 @@ const AdminPage: React.FC<Props> = () => {
     }, [ModalStateUpdate,ModalState])
 
     const DeleteAccount = useCallback((target) => {
-        fetch('/api/account', {
+        fetch('/api/Account', {
             method: "DELETE",
             body: JSON.stringify({target})
         }).then(resp => resp.json().then(jsn => {
@@ -51,7 +51,7 @@ const AdminPage: React.FC<Props> = () => {
         }), () => Alert.error("Unable to fetch"))
     }, [data, setData])
     const DeleteKey = useCallback((Key) => {
-        fetch('/api/Keys/DeleteKey', {
+        fetch('/api/Keys/Delete', {
             method: "DELETE",
             body: JSON.stringify({Key})
         }).then(resp => resp.json().then(jsn => {
@@ -66,7 +66,7 @@ const AdminPage: React.FC<Props> = () => {
         }), () => Alert.error("Unable to fetch"))
     }, [data, setData])
     const UpdateUser = useCallback((User) => {
-        fetch(`/api/user/`+User, {
+        fetch(`/api/User/`+User, {
             method: "PUT",
             body: JSON.stringify({power: KnownPower})
         }).then(resp => resp.json().then(jsn => {
@@ -82,7 +82,7 @@ const AdminPage: React.FC<Props> = () => {
         }), () => Alert.error("Unable to fetch"))
     }, [data, setData, KnownPower, Close])
     const Updatekey = useCallback((Key) => {
-        fetch('/api/Keys/ModifyKey', {
+        fetch('/api/Keys/Modify', {
             method: "PUT",
             body: JSON.stringify({Key, Power: KnownPower})
         }).then(resp => resp.json().then(jsn => {
@@ -98,7 +98,7 @@ const AdminPage: React.FC<Props> = () => {
         }), () => Alert.error("Unable to fetch"))
     }, [data, setData, KnownPower, Close])
     const CreateKey = useCallback(() => {
-        fetch('/api/Keys/CreateKey', {
+        fetch('/api/Keys/Create', {
             method: "Post",
         }).then(resp => resp.json().then(jsn => {
             if (!jsn.error) {

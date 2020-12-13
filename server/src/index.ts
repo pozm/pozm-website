@@ -2,7 +2,7 @@ import { json, urlencoded } from "body-parser";
 import {Connection, ConnectionConfig, createConnection} from "mysql";
 import { join } from "path";
 import rateLimit from "express-rate-limit"
-import { APIRouter } from "./api";
+import { APIRouter } from "./api/idx";
 import { keys } from "./keys";
 import express = require("express");
 let app = express();
@@ -40,43 +40,13 @@ app.use(
     saveUninitialized: false,
     cookie: {
         secure: "auto",
-        expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30000),
-        path: "/",
-        domain : GetType() ?".pozm.pw" : "localhost"
+        expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * (365 * 3)),
+        domain : GetType() ?"pozm.pw" : "localhost"
     },
     name: "session",
   })
 );
 
-const dataStructures = {
-  account: `CREATE TABLE if not exists \`whitelist\`.\`account\` (
-        \`id\` int NOT NULL AUTO_INCREMENT,
-        \`username\` varchar(15) NOT NULL,
-        \`password\` text NOT NULL,
-        \`email\` text NOT NULL,
-        \`registeredAt\` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-        \`powerId\` int NOT NULL DEFAULT '0',
-        \`subscriptions\` json,
-        PRIMARY KEY (\`id\`)
-    )`,
-  accountPWReset: `create table if not exists \`whitelist\`.\`PWreset\`(
-        \`id\` varchar(255) NOT NULL,
-        \`userid\` INT NOT NULL,
-        \`expires\` DATE NULL,
-        PRIMARY KEY (\`id\`),
-        UNIQUE INDEX \`id_UNIQUE\` (\`id\` ASC),
-        UNIQUE INDEX \`userid_UNIQUE\` (\`userid\` ASC));
-    `,
-  gay: `CREATE TABLE if not exists \`is-gay\`.\`gay\` (
-        \`user\` VARCHAR(255) NOT NULL,
-        \`id\` VARCHAR(45) NOT NULL,
-        \`by\` VARCHAR(255) NOT NULL,
-        \`reason\` VARCHAR(255) NOT NULL DEFAULT 'They are gay',
-        \`at\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (\`id\`),
-        UNIQUE INDEX \`id_UNIQUE\` (\`id\` ASC));
-    `,
-};
 
 const db_config : string | ConnectionConfig = {
     host: "localhost",
@@ -109,37 +79,21 @@ function handleDisconnect(doSkip? : number) { // basically lazy disconnect handl
 con = createConnection(db_config);
 handleDisconnect(1);
 
-// let con = createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: keys.mysqlPassWord,
-// });
-
-
 let type = GetType();
 
 console.log("pre : " + type);
 
-// var root = { hello: () => 'Hello world!' };
-
-// let mw = ExGraphQL.graphqlHTTP(
-//     {
-//         pretty:true,
-//         schema:{},
-//         rootValue:root,
-//         graphiql: true,
-
-//     }
-// )
-
 // Routes
 
-// app.use('/graphql',mw)
 app.use("/api", APIRouter);
 app.locals.CurrentContext = type
 if (type) {
+
+    // app.all(/.*/,(req,res,next)=>{
+    //     res.header('')
+    // })
+
     app.all(/.*/, function(req, res, next) {
-        // res.header("content-security-policy","style-src 'self' https://*.google.com 'unsafe-inline' https://stackpath.bootstrapcdn.com https://*.googleapis.com; script-src 'self' http://localhost https://*.pozm.pw https://cdnjs.cloudflare.com https://stackpath.bootstrapcdn.com https://code.jquery.com 'sha256-GQrFe/mgM9DWkplwjVc1jXMPlWiyZB8kB6oQVzuloI8=' https://*.cloudflare.com; font-src https://*; ")
         let host = req.header("host");
         if (host?.match(/^www\..*/i) || host?.includes("localhost")) {
             next();
@@ -156,8 +110,13 @@ if (type) {
     });
 }
 
+app.use(function (err: express.ErrorRequestHandler, req :express.Request, res: express.Response, next : express.NextFunction) {
+    console.error(err)
+    res.status(500).send('what')
+})
+
 app.listen(type ? 80 : 5000, () =>
   console.log(`server listening on port ${type ? 80 : 5000}`)
 );
 
-export { con, dataStructures };
+export { con };

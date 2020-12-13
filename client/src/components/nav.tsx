@@ -81,7 +81,7 @@ export const NavComp: React.FC<Props> = () => {
     const isMobile = useMediaQuery({query: '(max-width: 760px)'});
 
     let signout = useCallback(() => {
-        fetch('/api/killSession', {method: 'DELETE'}).then((res) => {
+        fetch('/api/Account/Session', {method: 'DELETE'}).then((res) => {
             mutate('api/getUser')
         });
     }, [mutate])
@@ -149,17 +149,10 @@ export const NavComp: React.FC<Props> = () => {
                 <Nav.Item eventKey="2" icon={<Icon icon="envelope"/>}>
                     Contact
                 </Nav.Item>
-                <Dropdown eventKey="3" title="Projects" icon={<Icon icon="folder"/>}>
-                    <Dropdown.Item eventKey="3-1"> Rtx Client </Dropdown.Item>
-                    <Dropdown.Item eventKey="3-2"> Bot Tools </Dropdown.Item>
-                    <Dropdown.Item eventKey="3-3"> Discord Bot </Dropdown.Item>
-                    {/* <Dropdown.Item disabled eventKey="3-4"> Among us cheat </Dropdown.Item> */}
+                <Dropdown eventKey="3" title="Tools" icon={<Icon icon="folder"/>}>
+
                     <Dropdown.Item eventKey="3-5"> Webhook tools </Dropdown.Item>
-                    {/* <Dropdown.Item disabled eventKey="3-6"> Lua deobfuscator </Dropdown.Item> */}
                 </Dropdown>
-                {/*{user?.ID && <Dropdown eventKey="4" title="Account" icon={<Icon icon="user"/>}>*/}
-                {/*    {user?.ID && (<Dropdown.Item eventKey="4-2">View Content</Dropdown.Item>)}*/}
-                {/*</Dropdown>}*/}
 
                 <Dropdown eventKey="5" title="Other" icon={<Icon icon="question"/>}>
                     <Dropdown.Item eventKey="5-1" icon={<Icon icon="exclamation"/>}> Legal </Dropdown.Item>

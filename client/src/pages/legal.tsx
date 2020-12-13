@@ -25,6 +25,7 @@ export const Legal: React.FC<Props> = (props) => {
                                 <li> Registered password (HASHED)</li>
                                 <li> Discord ID (on link)</li>
                                 <li> Discord Username + tag (on link)</li>
+                                <li> Discord Avatar (on link)</li>
                             </ol>
                         </div>
                     </div>

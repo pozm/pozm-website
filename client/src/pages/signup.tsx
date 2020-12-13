@@ -34,13 +34,13 @@ const Signup: React.FC<Props> = (props) => {
             Alert.error("Missing values.")
             return;
         }
-        let data = await fetch("/api/createAccount", {
+        let data = await fetch("/api/Account/Create", {
             body: JSON.stringify({...state.formValue, Recaptcha: state.Recaptcha, Key}),
             mode: "same-origin",
             method: "POST",
         });
         if (data.ok) {
-            mutate("/api/getUser")
+            mutate("/api/Account/me")
         } else {
             data.json().then((jsn) => {
                 let msg = jsn.message

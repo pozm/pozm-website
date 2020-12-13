@@ -12,7 +12,7 @@ type Props = {
 export const UserFontID: React.FC<Props> = (props) => {
     let [user,setUser] = useState<AdminData.User>()
     useEffect(()=>{
-        fetch("/api/user/"+props.ID).then(resp=>resp.json()).then(jsn=>{
+        fetch("/api/Users/"+props.ID).then(resp=>resp.json()).then(jsn=>{
             if (jsn?.error) setUser(({Username : 'Unknown', PowerId:0, ID: props.ID} as any))
             else setUser(jsn.data)
         })

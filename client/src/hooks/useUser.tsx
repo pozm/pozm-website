@@ -4,7 +4,7 @@ import {AdminData} from "../types/adminTypes";
 
 
 export default function useUser() {
-    const { data, mutate, error } = useSWR("/api/getUser", fetcher);
+    const { data, mutate, error } = useSWR("/api/Account/me", fetcher);
 
     const loading = !data && !error;
     const loggedOut = error && error.status === 403;

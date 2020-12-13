@@ -72,6 +72,20 @@ const App: React.FC<Props> = () => {
                             duration: 10e3,
                         });
                         break;
+                    case "11" :
+                        Notification.open({
+                            title: 'Discord Login',
+                            description: <div>Successfully logged in using discord.</div>,
+                            duration: 10e3,
+                        });
+                        break;
+                    case "12" :
+                        Notification.open({
+                            title: 'Discord Link',
+                            description: <div>Unable to login with this discord account, are you sure you linked?</div>,
+                            duration: 10e3,
+                        });
+                        break;
                 }
 
             }
@@ -85,8 +99,8 @@ const App: React.FC<Props> = () => {
                     <div style={{zIndex: 10}}>
                         <Navigation/>
                     </div>
-                    <Container className="container-fluid main">
-                        <Content style={{overflow: "hidden",minHeight:"100vh"}}>
+                    <Content style={{minHeight:"100vh",}}  >
+                        <Container className="main" style={{width:"calc(100% - 15px)", paddingLeft:15,paddingRight:0}} >
                             {loading ?
                                 <Loader size={"lg"} center content={"Requesting data..."} vertical/>
                                 :
@@ -146,8 +160,8 @@ const App: React.FC<Props> = () => {
                                     <Route component={Page404}/>
                                 </Switch>
                             }
-                        </Content>
-                    </Container>
+                        </Container>
+                    </Content>
                 </div>
             </Router>
         </div>

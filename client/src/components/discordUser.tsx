@@ -18,7 +18,7 @@ type Props= {
 export const DiscordUser: React.FC<Props> = ({size=64,text,avatar,reff,tag,userName,className,style,fontSize}) => {
   return (
 
-    <div className={"DiscordUserParent"} >
+    <div className={"DiscordUserParent"} style={style} >
 
       {/* avatar */}
       <img className={"Avatar"} width={size} src={avatar} />
